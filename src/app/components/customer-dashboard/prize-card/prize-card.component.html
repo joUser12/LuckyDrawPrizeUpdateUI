@@ -1,0 +1,57 @@
+<mat-card class="prize-card gold-premium-panel h-full relative overflow-hidden">
+  
+  <!-- Metallic reflective light sheen -->
+  <div class="gold-sheen"></div>
+  <div class="stars-gold-bg"></div>
+
+  <mat-card-header class="justify-center pb-3 border-0">
+    <div class="gold-title-wrapper text-center">
+      <span class="gold-trophy">🏆</span>
+      <h2 class="gold-header-title">FIRST PRIZE WINNER</h2>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content class="gold-content flex flex-col items-center justify-center flex-grow-1">
+    @if (winnerService.isInitialLoading()) {
+      <!-- Loading Skeleton -->
+      <div class="skeleton-avatar-gold mb-3"></div>
+      <div class="skeleton-line-gold-name mb-2"></div>
+      <div class="skeleton-line-gold-coupon mb-3"></div>
+      <div class="skeleton-badge-gold"></div>
+    } @else {
+      @if (winnerService.firstPrizeWinner(); as winner) {
+        <!-- Gold Winner Profile Photo -->
+        <div class="gold-avatar-container mb-3">
+          <div class="gold-avatar-halo"></div>
+          @if (winner.avatarUrl) {
+            <img [src]="winner.avatarUrl" alt="{{ winner.customerName }}" class="gold-avatar" />
+          } @else {
+            <div class="gold-avatar-fallback">
+              {{ winner.customerName.substring(0,2).toUpperCase() }}
+            </div>
+          }
+          <div class="gold-star-badge">⭐️</div>
+        </div>
+
+        <!-- Winner Info -->
+        <h3 class="gold-winner-name">{{ winner.customerName }}</h3>
+        <span class="gold-coupon-no">Coupon No.{{ winner.couponNumber }}</span>
+
+        <!-- Prize Details Ribbon -->
+        <div class="gold-ribbon mt-4">
+          <span class="ribbon-text">Prize No.{{ winner.prizeNumber }} - {{ winner.prizeName }}</span>
+        </div>
+
+        <div class="gold-footer-sparkle mt-3">
+          <span class="sparkle-text">✨ EXCLUSIVE WINNER ✨</span>
+        </div>
+      } @else {
+        <!-- Empty State -->
+        <div class="text-center py-5">
+          <mat-icon class="gold-empty-icon">military_tech</mat-icon>
+          <p class="text-white-50">No first prize winner drawn yet</p>
+        </div>
+      }
+    }
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,63 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.dashboard-wrapper {
+  background: var(--body-bg);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.75rem 0;
+  overflow: hidden;
+  transition: background 0.3s ease;
+}
+
+.dash-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .dash-container { padding: 0 1.25rem; }
+}
+@media (min-width: 1280px) {
+  .dash-container { padding: 0 1.5rem; }
+}
+
+.ceremony-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+.ceremony-col-left,
+.ceremony-col-main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+@media (max-width: 1024px) {
+  .ceremony-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@keyframes bounce-emoji {
+  from { transform: translateY(0) rotate(0deg); }
+  to { transform: translateY(-4px) rotate(10deg); }
+}
+

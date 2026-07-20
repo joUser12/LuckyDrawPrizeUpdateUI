@@ -1,0 +1,152 @@
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at center, #2e1065 0%, #17072b 50%, #090212 100%);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  z-index: 9999;
+  overflow: hidden;
+  animation: fade-in 0.3s ease-out;
+}
+
+.fullscreen-glow-light {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 550px;
+  height: 550px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.35) 0%, rgba(168, 85, 247, 0.2) 50%, transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  animation: bgPulse 2s infinite alternate ease-in-out;
+}
+
+.soundwave-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 2px solid rgba(245, 158, 11, 0.4);
+  pointer-events: none;
+  animation: ringExpand 2s infinite cubic-bezier(0.1, 0.8, 0.3, 1);
+
+  &.r1 {
+    width: 250px;
+    height: 250px;
+  }
+  &.r2 {
+    width: 250px;
+    height: 250px;
+    animation-delay: 0.7s;
+  }
+}
+
+.dramatic-countdown-wrap {
+  position: relative;
+  z-index: 10;
+}
+
+/* Giant 3D Countdown Number / Text */
+.giant-countdown-num {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 15rem;
+  line-height: 1;
+  background: linear-gradient(180deg, #ffffff 0%, #fef08a 30%, #f59e0b 70%, #d97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 20px 50px rgba(245, 158, 11, 0.75));
+  animation: popZoom 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;
+
+  &.is-text {
+    font-size: 7.5rem;
+    letter-spacing: 0.05em;
+    background: linear-gradient(180deg, #ffffff 0%, #f472b6 40%, #e11d48 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 20px 60px rgba(225, 29, 72, 0.8));
+  }
+}
+
+/* Subtitle Badge */
+.draw-subtitle-badge {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(245, 158, 11, 0.4);
+  color: #fef08a;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 1.15rem;
+  letter-spacing: 0.15em;
+  padding: 0.6rem 2rem;
+  border-radius: 50px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  text-transform: uppercase;
+}
+
+/* 5-Second Progress Bar */
+.loading-bar-container {
+  width: 320px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.loading-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 50%, #fef08a 100%);
+  border-radius: 10px;
+  box-shadow: 0 0 16px rgba(251, 191, 36, 0.9);
+  animation: fillProgress 5s linear forwards;
+}
+
+/* Keyframes */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popZoom {
+  0% {
+    transform: scale(0.4) translateY(20px);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.15) translateY(-5px);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bgPulse {
+  0% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.6; }
+  100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+}
+
+@keyframes ringExpand {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.8);
+    opacity: 0;
+  }
+}
+
+@keyframes fillProgress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}

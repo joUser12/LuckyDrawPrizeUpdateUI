@@ -1,0 +1,298 @@
+.gold-premium-panel {
+  background: linear-gradient(135deg, rgba(30, 20, 5, 0.95) 0%, rgba(70, 48, 10, 0.95) 100%);
+  border: 1.5px solid rgba(251, 191, 36, 0.4);
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(217, 119, 6, 0.15);
+  height: 580px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 20px 45px rgba(217, 119, 6, 0.25);
+    border-color: rgba(251, 191, 36, 0.7);
+    transform: translateY(-2px);
+  }
+}
+
+/* Diagonal metallic light sheen */
+.gold-sheen {
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 30%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 239, 163, 0.2) 50%,
+    transparent
+  );
+  transform: rotate(25deg);
+  animation: shine-flow 7s infinite linear;
+  pointer-events: none;
+}
+
+.stars-gold-bg {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(251, 191, 36, 0.08) 1.5px, transparent 0);
+  background-size: 20px 20px;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.gold-title-wrapper {
+  margin-top: 1rem;
+}
+
+.gold-trophy {
+  font-size: 2.2rem;
+  display: inline-block;
+  animation: trophy-wiggle 3s infinite ease-in-out;
+  filter: drop-shadow(0 4px 10px rgba(251, 191, 36, 0.4));
+}
+
+.gold-header-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 850;
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  background: linear-gradient(to right, #ffe066, #f59e0b, #ffe066);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.gold-content {
+  padding: 1.5rem;
+}
+
+/* Avatar Containers */
+.gold-avatar-container {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  padding: 5px;
+  background: linear-gradient(135deg, #fef08a, #d97706);
+  box-shadow: 0 10px 25px rgba(217, 119, 6, 0.4);
+  animation: float-gold 5s ease-in-out infinite;
+}
+
+.gold-avatar-halo {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border: 1px dashed rgba(251, 191, 36, 0.3);
+  border-radius: 50%;
+  animation: rotate-dashed 20s linear infinite;
+}
+
+.gold-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #1e1405;
+}
+
+.gold-avatar-fallback {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(217, 119, 6, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 2.5rem;
+  color: #fbbf24;
+}
+
+.gold-star-badge {
+  position: absolute;
+  bottom: 0;
+  right: 6px;
+  background: linear-gradient(135deg, #fef08a, #f59e0b);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid #1e1405;
+  animation: star-pulse 1.5s infinite alternate;
+}
+
+/* Gold Details */
+.gold-winner-name {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 1.6rem;
+  color: #ffffff;
+  margin: 0;
+  text-transform: capitalize;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.gold-coupon-no {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #fef08a;
+  background: rgba(251, 191, 36, 0.08);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  padding: 0.2rem 0.75rem;
+  border-radius: 20px;
+  margin-top: 0.5rem;
+}
+
+/* Ribbon details banner */
+.gold-ribbon {
+  background: linear-gradient(90deg, transparent 0%, #b45309 25%, #d97706 50%, #b45309 75%, transparent 100%);
+  border-top: 1.5px solid rgba(254, 240, 138, 0.4);
+  border-bottom: 1.5px solid rgba(254, 240, 138, 0.4);
+  width: 112%;
+  padding: 0.6rem 0;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+.ribbon-text {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  text-transform: uppercase;
+}
+
+.gold-footer-sparkle {
+  .sparkle-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: rgba(251, 191, 36, 0.5);
+    letter-spacing: 0.2em;
+  }
+}
+
+/* Skeletons */
+.skeleton-avatar-gold {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.1), transparent);
+    animation: shimmer 1.5s infinite;
+  }
+}
+
+.skeleton-line-gold-name {
+  width: 150px;
+  height: 22px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.1), transparent);
+    animation: shimmer 1.5s infinite;
+  }
+}
+
+.skeleton-line-gold-coupon {
+  width: 110px;
+  height: 16px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.1), transparent);
+    animation: shimmer 1.5s infinite;
+  }
+}
+
+.skeleton-badge-gold {
+  width: 100%;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.04);
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.1), transparent);
+    animation: shimmer 1.5s infinite;
+  }
+}
+
+/* Empty icon styles */
+.gold-empty-icon {
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+  color: rgba(251, 191, 36, 0.2);
+}
+
+/* Animations */
+@keyframes shine-flow {
+  0% { left: -100%; }
+  18% { left: 150%; }
+  100% { left: 150%; }
+}
+
+@keyframes trophy-wiggle {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  5% { transform: scale(1.1) rotate(-8deg); }
+  10% { transform: scale(1.1) rotate(8deg); }
+  15% { transform: scale(1.1) rotate(-8deg); }
+  20% { transform: scale(1.1) rotate(6deg); }
+  25% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes float-gold {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes star-pulse {
+  from { transform: scale(0.9); }
+  to { transform: scale(1.1); }
+}
+
+@keyframes rotate-dashed {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}

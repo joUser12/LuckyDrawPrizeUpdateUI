@@ -1,0 +1,68 @@
+<div class="carousel-wrapper py-2">
+  
+  <!-- Carousel Header Controls -->
+  <div class="carousel-header flex justify-between items-center mb-3 px-1">
+    <div class="flex items-center gap-2">
+      <span class="carousel-badge">🏆</span>
+      <h2 class="carousel-title mb-0">Previously Winners</h2>
+    </div>
+    
+    <!-- Controls (Hidden if loading or empty) -->
+    @if (!winnerService.isInitialLoading() && winnerService.previouslyWinners().length > 0) {
+      <div class="carousel-actions flex gap-2">
+        <button mat-icon-button class="btn-arrow-glass" (click)="scrollLeft()" title="Scroll Left">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button mat-icon-button class="btn-arrow-glass" (click)="scrollRight()" title="Scroll Right">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    }
+  </div>
+
+  <!-- Scroll Container -->
+  <div #carouselContainer class="carousel-container flex gap-4 pb-2">
+    @if (winnerService.isInitialLoading()) {
+      <!-- Skeletons -->
+      @for (i of [1, 2, 3, 4, 5]; track i) {
+        <div class="skeleton-carousel-card flex-shrink-0">
+          <div class="skeleton-avatar-mini mx-auto mb-2"></div>
+          <div class="skeleton-line-mini-name mx-auto mb-2"></div>
+          <div class="skeleton-line-mini-detail mx-auto"></div>
+        </div>
+      }
+    } @else {
+      @if (winnerService.previouslyWinners().length === 0) {
+        <div class="carousel-empty text-center w-full py-4 glass-panel">
+          <span class="empty-icon-mini">💤</span>
+          <p class="empty-text-mini mb-0 mt-1">No previous winners in history yet</p>
+        </div>
+      } @else {
+        @for (winner of winnerService.previouslyWinners(); track winner.couponNumber) {
+          <div class="carousel-card glass-panel flex-shrink-0 flex flex-col items-center text-center">
+            <!-- User Avatar -->
+            <div class="avatar-holder-mini mb-2">
+              @if (winner.avatarUrl) {
+                <img [src]="winner.avatarUrl" alt="{{ winner.customerName }}" class="avatar-mini" />
+              } @else {
+                <div class="avatar-initials-mini">
+                  {{ winner.customerName.substring(0, 2).toUpperCase() }}
+                </div>
+              }
+            </div>
+
+            <!-- Profile Info -->
+            <h4 class="winner-name-mini winner-truncate w-full">{{ winner.customerName }}</h4>
+            <span class="coupon-no-mini">Coupon No. {{ winner.couponNumber }}</span>
+            
+            <!-- Prize Detail Banner -->
+            <div class="prize-tag-mini mt-2">
+              <mat-icon class="gift-icon-mini">card_giftcard</mat-icon>
+              <span class="prize-name-mini prize-truncate">{{ winner.prizeName }}</span>
+            </div>
+          </div>
+        }
+      }
+    }
+  </div>
+</div>

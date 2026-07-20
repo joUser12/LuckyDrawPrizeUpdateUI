@@ -1,0 +1,283 @@
+.login-wrapper {
+  min-height: 100vh;
+  width: 100vw;
+  position: relative;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background-image: url('/bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(2.5px) brightness(0.85);
+    z-index: 1;
+  }
+}
+
+/* Back Link (Classic Gray Style) */
+.back-link {
+  top: 2rem;
+  left: 2rem;
+  color: #64748b;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  z-index: 10;
+
+  &:hover {
+    color: #1e293b;
+    transform: translateX(-3px);
+  }
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Modern Translucent Card Design */
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background-color: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15),
+              0 5px 15px rgba(0, 0, 0, 0.05);
+  z-index: 5;
+}
+
+.logo-box {
+  font-size: 2.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.logo-name {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 1.7rem;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.logo-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 500;
+  margin-top: 0.2rem;
+}
+
+/* Classic Form Fields Override */
+.classic-field {
+  ::v-deep {
+    /* Base background fill & corner radius */
+    .mdc-text-field--outlined {
+      background-color: #f8fafc !important;
+      border-radius: 10px !important;
+    }
+
+    /* Inactive outline state (soft grey instead of harsh dark) */
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: #cbd5e1 !important;
+      border-width: 1px !important;
+      transition: border-color 0.2s ease, border-width 0.2s ease !important;
+    }
+
+    /* Hover outline state */
+    .mdc-text-field:not(.mdc-text-field--disabled):hover {
+      .mdc-notched-outline__leading,
+      .mdc-notched-outline__notch,
+      .mdc-notched-outline__trailing {
+        border-color: #94a3b8 !important;
+      }
+    }
+
+    /* Focused outline state */
+    .mdc-text-field--focused {
+      .mdc-notched-outline__leading,
+      .mdc-notched-outline__notch,
+      .mdc-notched-outline__trailing {
+        border-color: #8b5cf6 !important;
+        border-width: 2px !important;
+      }
+    }
+
+    /* Invalid outline state */
+    .mdc-text-field--invalid {
+      .mdc-notched-outline__leading,
+      .mdc-notched-outline__notch,
+      .mdc-notched-outline__trailing {
+        border-color: #ef4444 !important;
+        border-width: 1.5px !important;
+      }
+
+      &:hover {
+        .mdc-notched-outline__leading,
+        .mdc-notched-outline__notch,
+        .mdc-notched-outline__trailing {
+          border-color: #dc2626 !important;
+        }
+      }
+    }
+
+    /* Input text formatting */
+    .mdc-text-field__input {
+      color: #0f172a !important;
+      font-family: 'Inter', sans-serif !important;
+      font-size: 0.95rem !important;
+      caret-color: #8b5cf6 !important;
+    }
+
+    /* Label text formatting */
+    .mat-mdc-form-field-label {
+      color: #64748b !important;
+      font-family: 'Inter', sans-serif !important;
+    }
+
+    /* Label focused */
+    .mdc-text-field--focused .mat-mdc-form-field-label {
+      color: #8b5cf6 !important;
+    }
+
+    /* Label invalid */
+    .mdc-text-field--invalid .mat-mdc-form-field-label {
+      color: #ef4444 !important;
+    }
+
+    /* Suffix icon details */
+    .field-icon {
+      color: #94a3b8 !important;
+    }
+  }
+}
+
+.field-icon {
+  color: #94a3b8;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* Checkbox and links */
+.custom-checkbox {
+  accent-color: #8b5cf6;
+  cursor: pointer;
+}
+
+.checkbox-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  color: #475569;
+  cursor: pointer;
+  user-select: none;
+}
+
+.forgot-pwd {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  color: #8b5cf6;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #6d28d9;
+    text-decoration: underline;
+  }
+}
+
+/* Classic Solid Button */
+.btn-login-submit {
+  background-color: #8b5cf6 !important;
+  color: #ffffff !important;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem !important;
+  border-radius: 8px !important;
+  padding: 0.75rem 0 !important;
+  height: 46px !important;
+  transition: background-color 0.2s ease, transform 0.1s ease !important;
+  box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.2) !important;
+
+  &:hover {
+    background-color: #7c3aed !important;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    background-color: #cbd5e1 !important;
+    color: #94a3b8 !important;
+    box-shadow: none !important;
+    cursor: not-allowed;
+  }
+}
+
+.login-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.login-footer {
+  border-top: 1px solid #f1f5f9;
+  padding-top: 1.25rem;
+}
+
+.footer-note {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #ef4444;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 576px) {
+  .back-link {
+    top: 1rem;
+    left: 1rem;
+    font-size: 0.85rem;
+  }
+  .login-card {
+    padding: 2rem 1.25rem !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    background-color: rgba(255, 255, 255, 0.94) !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+    max-width: 92% !important;
+    margin: 0 auto;
+  }
+}

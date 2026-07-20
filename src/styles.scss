@@ -1,1 +1,267 @@
-/* You can add global styles to this file, and also import other style files */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* ================================================================
+   GLOBAL DESIGN SYSTEM — No Bootstrap. Angular Material + Custom CSS
+   ================================================================ */
+
+/* ---------- FLEX UTILITIES ---------- */
+.flex          { display: flex; }
+.flex-col      { display: flex; flex-direction: column; }
+.flex-row      { display: flex; flex-direction: row; }
+.flex-wrap     { flex-wrap: wrap; }
+.flex-grow-1   { flex-grow: 1; }
+.items-center  { align-items: center; }
+.items-start   { align-items: flex-start; }
+.justify-between { justify-content: space-between; }
+.justify-center  { justify-content: center; }
+.justify-end     { justify-content: flex-end; }
+.gap-1  { gap: 0.25rem; }
+.gap-2  { gap: 0.5rem; }
+.gap-3  { gap: 0.75rem; }
+.gap-4  { gap: 1rem; }
+
+/* ---------- DISPLAY UTILITIES ---------- */
+.block          { display: block; }
+.hidden         { display: none; }
+.h-full         { height: 100%; }
+.w-full         { width: 100%; }
+
+/* ---------- TEXT UTILITIES ---------- */
+.text-center    { text-align: center; }
+.text-right     { text-align: right; }
+.text-left      { text-align: left; }
+.uppercase      { text-transform: uppercase; }
+.capitalize     { text-transform: capitalize; }
+
+/* ---------- POSITION UTILITIES ---------- */
+.relative       { position: relative; }
+.absolute       { position: absolute; }
+.sticky         { position: sticky; }
+
+/* ---------- SPACING UTILITIES ---------- */
+.mb-0   { margin-bottom: 0; }
+.mb-1   { margin-bottom: 0.25rem; }
+.mb-2   { margin-bottom: 0.5rem; }
+.mb-3   { margin-bottom: 0.75rem; }
+.mb-4   { margin-bottom: 1rem; }
+.mt-1   { margin-top: 0.25rem; }
+.mt-2   { margin-top: 0.5rem; }
+.mt-3   { margin-top: 0.75rem; }
+.mt-4   { margin-top: 1rem; }
+.mt-5   { margin-top: 1.5rem; }
+.py-3   { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+.py-4   { padding-top: 1rem;    padding-bottom: 1rem; }
+.py-5   { padding-top: 1.5rem;  padding-bottom: 1.5rem; }
+.px-3   { padding-left: 0.75rem; padding-right: 0.75rem; }
+.px-4   { padding-left: 1rem;    padding-right: 1rem; }
+.p-3    { padding: 0.75rem; }
+.p-4    { padding: 1rem; }
+
+/* ---------- RESPONSIVE SHOW/HIDE ---------- */
+/* Mobile-first: show by default, hide on sm+ */
+.hide-sm  { display: none; }
+.show-md  { display: none; }
+@media (min-width: 600px)  { .hide-sm  { display: inline; } }
+@media (min-width: 768px)  { .show-md  { display: block;  } }
+@media (max-width: 767px)  { .hide-md  { display: none;  } }
+
+/* ---------- CSS GRID — replaces Bootstrap .row / .col-* ---------- */
+.mat-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+.mat-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+.mat-grid-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+.col-span-2 { grid-column: span 2; }
+
+@media (max-width: 767px) {
+  .mat-grid-4,
+  .mat-grid-form { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 575px) {
+  .mat-grid-4,
+  .mat-grid-form { grid-template-columns: 1fr; }
+  .col-span-2    { grid-column: span 1; }
+}
+
+/* ---------- DASHBOARD 3-COLUMN LAYOUT ---------- */
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 1rem;
+  align-items: stretch;
+}
+@media (max-width: 1024px) {
+  .dash-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .dash-col-center { order: -1; grid-column: span 2; }
+}
+@media (max-width: 600px) {
+  .dash-grid { grid-template-columns: 1fr; }
+  .dash-col-center { grid-column: span 1; order: 0; }
+}
+
+/* --- DESIGN SYSTEM COLOR TOKEN VARIABLES --- */
+:root {
+  /* Default Theme: Premium Light Purple Theme */
+  --body-bg: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+  --header-bg: rgba(255, 255, 255, 0.7);
+  --footer-bg: rgba(255, 255, 255, 0.8);
+  --card-bg: rgba(255, 255, 255, 0.6);
+  --card-bg-hover: rgba(255, 255, 255, 0.8);
+  --border-color: rgba(139, 92, 246, 0.15);
+  
+  --text-primary: #1e1b4b;
+  --text-muted: #6366f1;
+  --theme-purple: #8b5cf6;
+  
+  --skeleton-bg: rgba(139, 92, 246, 0.05);
+  --skeleton-shimmer: rgba(139, 92, 246, 0.1);
+  --toast-bg: #1e1b4b;
+  --toast-text: #ffffff;
+}
+
+body.dark-theme {
+  /* Dark Theme: Premium Deep Cyber-Purple Theme */
+  --body-bg: linear-gradient(135deg, #0b061e 0%, #03010b 100%);
+  --header-bg: rgba(11, 6, 30, 0.7);
+  --footer-bg: rgba(3, 1, 11, 0.8);
+  --card-bg: rgba(255, 255, 255, 0.03);
+  --card-bg-hover: rgba(255, 255, 255, 0.06);
+  --border-color: rgba(255, 255, 255, 0.08);
+  
+  --text-primary: #f3f4f6;
+  --text-muted: rgba(168, 85, 247, 0.7);
+  --theme-purple: #a855f7;
+  
+  --skeleton-bg: rgba(255, 255, 255, 0.03);
+  --skeleton-shimmer: rgba(255, 255, 255, 0.06);
+  --toast-bg: #c084fc;
+  --toast-text: #090514;
+}
+
+/* --- GLOBAL BODY STYLING --- */
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--text-primary);
+  background: var(--body-bg) !important;
+  background-attachment: fixed !important;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* --- GLASSMORPHISM BASE PANEL STYLES --- */
+.glass-panel {
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-radius: 20px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* --- MATERIAL MAT-CARD GLOBAL OVERRIDES --- */
+.mat-mdc-card {
+  --mdc-outlined-card-container-color: transparent !important;
+  border: none !important;
+}
+
+.mat-mdc-card-header {
+  padding: 0 !important;
+}
+
+/* --- TOAST NOTIFICATIONS (MAT-SNACKBAR) POLISH --- */
+.cdk-overlay-container {
+  z-index: 10000 !important; /* Ensure toast sits above loader */
+}
+
+.premium-toast {
+  --mdc-snackbar-container-color: var(--toast-bg) !important;
+  --mat-snack-bar-button-color: var(--toast-text) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  
+  .mdc-snackbar__label {
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    color: var(--toast-text) !important;
+  }
+
+  .mdc-button__label {
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.05em !important;
+  }
+}
+
+/* ====== SNACKBAR PANEL CLASSES ====== */
+
+/* Success — vibrant emerald */
+.snack-success .mdc-snackbar__surface {
+  background: linear-gradient(135deg, #059669, #10b981) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35) !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+
+  .mdc-snackbar__label {
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 0.875rem !important;
+    color: #ffffff !important;
+    letter-spacing: 0.02em !important;
+  }
+
+  .mdc-button__label {
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 800 !important;
+    color: rgba(255,255,255,0.85) !important;
+    letter-spacing: 0.05em !important;
+  }
+}
+
+/* Delete — warm coral/red */
+.snack-delete .mdc-snackbar__surface {
+  background: linear-gradient(135deg, #dc2626, #ef4444) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.35) !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+
+  .mdc-snackbar__label {
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 0.875rem !important;
+    color: #ffffff !important;
+    letter-spacing: 0.02em !important;
+  }
+
+  .mdc-button__label {
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 800 !important;
+    color: rgba(255,255,255,0.85) !important;
+    letter-spacing: 0.05em !important;
+    text-transform: uppercase !important;
+  }
+}
