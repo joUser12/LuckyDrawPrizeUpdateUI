@@ -1,0 +1,112 @@
+<div class="card-glow-wrapper h-full">
+  <!-- Confetti canvas overlay -->
+  <canvas #confettiCanvas class="confetti-canvas"></canvas>
+
+  <div class="ceremony-stage h-full flex flex-col justify-between p-4 relative">
+
+    <!-- TOP SUBHEADER: CEREMONY DISPLAY -->
+    <div class="stage-header flex items-center justify-between w-full mb-3">
+      <div class="header-left flex items-center gap-2">
+        <span class="header-tag">CEREMONY FEED</span>
+      </div>
+
+      <div class="stage-title-wrap text-center flex-grow-1">
+        <span class="stage-title">C E R E M O N Y &nbsp;&nbsp;&nbsp;&nbsp; D I S P L A Y</span>
+        <div class="status-dots flex items-center justify-center gap-2 mt-1">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-blue"></span>
+          <span class="dot dot-green"></span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <span class="sec-badge flex items-center gap-1.5">
+          <span class="badge-live-dot"></span>
+          LIVE
+        </span>
+      </div>
+    </div>
+
+    <!-- MAIN DISPLAY CONTENT AREA -->
+    <div class="stage-main flex-grow-1 flex flex-col items-center justify-center text-center my-auto py-2">
+      @if (winnerService.isInitialLoading()) {
+        <div class="py-5 text-center text-muted flex flex-col items-center gap-2">
+          <span class="loading-spinner"></span>
+          <span>Loading winner data...</span>
+        </div>
+      } @else if (winnerService.latestWinner(); as winner) {
+
+        <!-- GRAND WINNER CEREMONY TICKET CARD (Matching reference design) -->
+        <div class="grand-ceremony-card relative flex items-center justify-between">
+          
+          <!-- Left Wreath Medallion -->
+          <div class="wreath-medallion-wrap">
+            <div class="winner-badge">
+              <div class="crown">👑</div>
+              <div class="ribbon"></div>
+              <div class="laurel left"></div>
+              <div class="laurel right"></div>
+              <div class="badge-center">
+                <span class="number">{{ winner.prizeNumber }}</span>
+                <sup>{{ winner.prizeNumber === '1' ? 'st' : winner.prizeNumber === '2' ? 'nd' : winner.prizeNumber === '3' ? 'rd' : 'th' }}</sup>
+              </div>
+            </div>
+          </div>
+
+          <!-- Center Content -->
+          <div class="ceremony-card-center flex-grow-1 flex flex-col items-center justify-center text-center px-3">
+            
+            <!-- Top 3D Red Ribbon Banner -->
+            <div class="ribbon-banner-3d mb-2">
+              <div class="ribbon-fold-left"></div>
+              <span class="ribbon-text">WINNER NAME</span>
+              <div class="ribbon-fold-right"></div>
+            </div>
+
+            <!-- Winner Name -->
+            <div class="winner-block my-1">
+              <h1 class="winner-headline">{{ winner.customerName }}</h1>
+            </div>
+
+            <!-- Coupon Divider -->
+            <div class="coupon-divider-row flex items-center justify-center gap-2 w-full my-1">
+              <span class="coupon-line"></span>
+              <span class="coupon-label-text">Coupon No.</span>
+              <span class="coupon-line"></span>
+            </div>
+
+            <!-- Red Coupon Box -->
+            <div class="coupon-red-card my-1">
+              <span class="coupon-red-digits">{{ winner.couponNumber }}</span>
+            </div>
+
+            <!-- Agent Footer -->
+            <div class="ceremony-meta-row flex flex-wrap items-center justify-center gap-2 mt-2">
+              <span class="agent-chip">👤 Agent: {{ winner.agentName }}</span>
+            </div>
+
+          </div>
+
+          <!-- Right Side Church Emblem Image -->
+          <div class="church-emblem-wrap">
+            <img src="church-logo.jpg" alt="St. Little Flower MSC Church Pushpagiri" class="church-emblem-img" />
+          </div>
+
+        </div>
+
+      } @else {
+        <!-- EMPTY STATE -->
+        <div class="empty-stage text-center py-5">
+          <span class="empty-glow-icon">🎰</span>
+          <h3 class="mt-3 text-gold">Ready for Draw</h3>
+          <p class="text-muted">Awaiting new winner announcement</p>
+        </div>
+      }
+    </div>
+
+
+
+  </div>
+</div>
+

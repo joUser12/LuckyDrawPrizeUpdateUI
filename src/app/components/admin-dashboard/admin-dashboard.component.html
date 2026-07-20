@@ -1,0 +1,226 @@
+<div class="admin-wrapper">
+
+  <!-- ===== HEADER ===== -->
+  <header class="admin-header flex items-center justify-between px-4">
+    <div class="flex items-center gap-3">
+      <div class="admin-logo">
+        <img src="church-logo.jpg" alt="Church Logo" class="admin-church-icon" />
+      </div>
+      <div>
+        <h1 class="admin-app-title mb-0">St. Little Flower Malankara Syrian Catholic Church</h1>
+        <span class="admin-role-badge">Pushpagiri · Admin Panel</span>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button class="btn-admin-action btn-portal" (click)="goToPortal()">
+        <mat-icon>tv</mat-icon>
+        <span class="hide-sm">Live Portal</span>
+      </button>
+      <button class="btn-admin-action btn-logout" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span class="hide-sm">Logout</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="admin-main py-4 px-4">
+
+
+
+    <!-- Add Winner Section -->
+    <div class="add-winner-section mb-4">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="sub-title mb-0">Winners List</h3>
+        <button class="btn-add-winner" (click)="toggleAddForm()">
+          <mat-icon>{{ showAddForm() ? 'close' : 'add' }}</mat-icon>
+          {{ showAddForm() ? 'Cancel' : 'Add Winner' }}
+        </button>
+      </div>
+
+      <!-- Add Winner Form -->
+      @if (showAddForm()) {
+      <div class="add-form-card mb-4">
+
+        <form [formGroup]="addForm" (ngSubmit)="submitWinner()" class="form-body">
+          <div class="mat-grid-form">
+
+            <mat-form-field appearance="outline" class="w-full admin-field">
+              <mat-label>Customer Name</mat-label>
+              <input matInput formControlName="customerName" placeholder="Enter Winner Name" />
+              <mat-icon matSuffix>person</mat-icon>
+              @if (addForm.get('customerName')?.invalid && addForm.get('customerName')?.touched) {
+              <mat-error>Customer name is required</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full admin-field">
+              <mat-label>Coupon Number</mat-label>
+              <input matInput formControlName="couponNumber" placeholder="Enter Coupon No." type="number" />
+              <mat-icon matSuffix>confirmation_number</mat-icon>
+              @if (addForm.get('couponNumber')?.invalid && addForm.get('couponNumber')?.touched) {
+              <mat-error>Coupon number is required</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full admin-field">
+              <mat-label>Prize Number</mat-label>
+              <input matInput formControlName="prizeNumber" type="number" placeholder="Enter Prize No. (e.g. 1)" />
+              <mat-icon matSuffix>emoji_events</mat-icon>
+              @if (addForm.get('prizeNumber')?.invalid && addForm.get('prizeNumber')?.touched) {
+              <mat-error>Prize number is required</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full admin-field">
+              <mat-label>Agent Name</mat-label>
+              <input matInput formControlName="agentName" placeholder="Enter Agent Name" />
+              <mat-icon matSuffix>support_agent</mat-icon>
+              @if (addForm.get('agentName')?.invalid && addForm.get('agentName')?.touched) {
+              <mat-error>Agent name is required</mat-error>
+              }
+            </mat-form-field>
+
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-form-cancel" (click)="toggleAddForm()">
+              <mat-icon>close</mat-icon> Cancel
+            </button>
+            <button type="submit" class="btn-form-submit" [disabled]="addForm.invalid || isSubmitting()">
+              @if (isSubmitting()) {
+              <span class="btn-spinner"></span> Saving...
+              } @else {
+              <mat-icon>add_circle</mat-icon> Add Winner
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+      }
+
+    </div>
+
+    <!-- Winners Table — Desktop (md+) -->
+    <div class="table-wrapper desktop-only">
+      @if (winnerService.isInitialLoading()) {
+      <div class="table-skeleton">
+        @for (i of [1,2,3,4,5]; track i) {
+        <div class="skeleton-row flex items-center gap-3 p-3">
+          <div class="sk-lines flex-grow-1">
+            <div class="sk-line sk-w60"></div>
+            <div class="sk-line sk-w40"></div>
+          </div>
+          <div class="sk-line sk-w80"></div>
+          <div class="sk-line sk-w80"></div>
+        </div>
+        }
+      </div>
+      } @else {
+      <div class="table-scroll">
+        <table class="winner-table w-full">
+          <thead>
+            <tr>
+              <th>Winner</th>
+              <th>Coupon No.</th>
+              <th>Prize</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (winnerService.allWinners().length === 0) {
+            <tr>
+              <td colspan="5" class="empty-row text-center py-5">
+                <span style="font-size:2rem">📭</span>
+                <p class="mt-2">No winners found. Add your first winner.</p>
+              </td>
+            </tr>
+            }
+            @for (winner of visibleWinners(); track winner.couponNumber + '_' + $index; let first = $first) {
+            <tr>
+              <td>
+                <div class="customer-cell">{{ winner.customerName }}</div>
+                <div class="agent-cell-sub">{{ winner.agentName }}</div>
+              </td>
+              <td><span class="coupon-cell">{{ winner.couponNumber }}</span></td>
+              <td>
+                <span class="prize-cell" [class.first-prize]="winner.prizeNumber === '1'">
+                  Prize {{ winner.prizeNumber }}
+                </span>
+              </td>
+              <td><span class="date-cell">{{ winner.createdDate }}</span></td>
+              <td>
+                <button class="btn-delete" (click)="deleteWinner(winner.couponNumber)" title="Remove winner">
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }
+    </div>
+
+    <!-- Winners Cards — Mobile only -->
+    <div class="mobile-list mobile-only">
+      @if (winnerService.isInitialLoading()) {
+      @for (i of [1,2,3]; track i) {
+      <div class="m-card m-card-skeleton">
+        <div class="sk-line sk-w60 mb-1"></div>
+        <div class="sk-line sk-w40"></div>
+      </div>
+      }
+      } @else if (winnerService.allWinners().length === 0) {
+      <div class="m-empty">
+        <span>📭</span>
+        <p>No winners yet. Add your first winner.</p>
+      </div>
+      } @else {
+      @for (winner of visibleWinners(); track winner.couponNumber + '_' + $index; let first = $first) {
+      <div class="m-card" [class.m-card-new]="first">
+        @if (first) { <span class="m-new-badge">NEW</span> }
+        <div class="m-card-top">
+          <div>
+            <div class="m-name">{{ winner.customerName }}</div>
+            <div class="m-agent">{{ winner.agentName }}</div>
+          </div>
+          <button class="btn-delete" (click)="deleteWinner(winner.couponNumber)">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </div>
+        <div class="m-card-bottom">
+          <span class="coupon-cell">🎟 {{ winner.couponNumber }}</span>
+          <span class="prize-cell" [class.first-prize]="winner.prizeNumber === '1'">
+            🎁 Prize {{ winner.prizeNumber }}
+          </span>
+          <span class="date-cell">📅 {{ winner.createdDate }}</span>
+        </div>
+      </div>
+      }
+      }
+    </div>
+
+
+
+
+    <!-- Show More / Show Less -->
+    @if (hasMore() && !winnerService.isInitialLoading()) {
+    <div class="show-more-row">
+      <button class="btn-show-more" (click)="toggleShowAll()">
+        <mat-icon>{{ showAll() ? 'expand_less' : 'expand_more' }}</mat-icon>
+        {{ showAll() ? 'Show Less' : 'Show ' + (winnerService.allWinners().length - PAGE_SIZE) + ' More Winners' }}
+      </button>
+    </div>
+    }
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="admin-footer text-center py-3">
+    <span>&copy; 2026 Lucky Draw Application. Admin Portal. All rights reserved.</span>
+  </footer>
+
+</div>

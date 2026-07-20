@@ -1,0 +1,30 @@
+@if (winnerService.showLoader()) {
+  <div class="loader-overlay flex flex-col items-center justify-center">
+    
+    <!-- Ambient Radial Particle Glows -->
+    <div class="fullscreen-glow-light"></div>
+    <div class="soundwave-ring r1"></div>
+    <div class="soundwave-ring r2"></div>
+
+    <!-- Fullscreen Giant Animated Countdown Wrapper -->
+    <div class="dramatic-countdown-wrap flex flex-col items-center justify-center text-center">
+      
+      <!-- Giant 3D Animated Number / Text -->
+      <div class="giant-countdown-num" [class.is-text]="countdown() === 'LET\'S GO!'">
+        {{ countdown() }}
+      </div>
+
+      <!-- Subtitle Badge -->
+      <div class="draw-subtitle-badge mt-4">
+        <span>🎰 SELECTING LUCKY WINNER</span>
+      </div>
+
+      <!-- 5-Second Progress Bar Fill -->
+      <div class="loading-bar-container mt-5">
+        <div class="loading-bar-fill"></div>
+      </div>
+
+    </div>
+
+  </div>
+}

@@ -1,0 +1,927 @@
+
+
+/* ====== ANNOUNCE GRID (replaces Bootstrap row / col-md-7 col-md-5) ====== */
+.announce-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1.5rem;
+  width: 100%;
+  align-items: center;
+}
+
+.announce-col-left,
+.announce-col-right {
+  width: 100%;
+}
+
+@media (max-width: 700px) {
+  .announce-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Skeleton wrapper */
+.announce-skeleton-wrap {
+  width: 100%;
+  padding: 1rem;
+}
+
+.announce-skeleton-left {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.announce-skeleton-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+/* Text utilities used inline */
+.text-white { color: #fff; }
+.text-white-50 { color: rgba(255,255,255,0.5); }
+.w-full { width: 100%; }
+
+
+.confetti-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  border-radius: 24px;
+}
+
+.announcement-card {
+  background: radial-gradient(circle at 10% 20%, rgba(88, 28, 135, 0.85) 0%, rgba(29, 78, 216, 0.85) 90%);
+  backdrop-filter: blur(20px);
+  border-radius: 21px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.5rem;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Ambient glow and dots */
+.glow-light {
+  position: absolute;
+  top: -150px;
+  right: -150px;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.sparkles-bg {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 0);
+  background-size: 24px 24px;
+  pointer-events: none;
+  opacity: 0.6;
+  z-index: -1;
+}
+
+/* Top Header Badge */
+.announcement-badge {
+  background: linear-gradient(90deg, rgba(168, 85, 247, 0.2), rgba(99, 102, 241, 0.2));
+  border: 1.5px solid rgba(168, 85, 247, 0.5);
+  color: #f3e8ff;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  padding: 0.5rem 1.25rem;
+  border-radius: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  animation: glow-pulse-button 2s infinite alternate;
+}
+
+.crown-icon {
+  font-size: 1.1rem;
+  animation: crown-wiggle 2.5s infinite ease-in-out;
+}
+
+/* Profiles & Details */
+.winner-profile {
+  width: 100%;
+}
+
+.avatar-ring-outer {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  padding: 6px;
+  background: linear-gradient(135deg, #eab308, #db2777, #9333ea);
+  border-radius: 50%;
+  box-shadow: 0 10px 25px rgba(219, 39, 119, 0.35);
+  animation: float-ring 6s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.avatar-ring-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(10, 10, 20, 0.8);
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.winner-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-fallback {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 2.5rem;
+  color: #db2777;
+}
+
+.victory-badge {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background: #f43f5e;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  animation: victory-bounce 1s infinite alternate cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Winner info column */
+.winner-label {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 0.75rem;
+  color: #f472b6;
+  letter-spacing: 0.15em;
+  margin: 0;
+}
+
+.winner-name {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 2.2rem;
+  color: #ffffff;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  text-transform: capitalize;
+  letter-spacing: -0.01em;
+  margin-top: 0.2rem;
+}
+
+.winner-meta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.meta-item {
+  color: rgba(255, 255, 255, 0.8);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #a855f7;
+  }
+}
+
+.meta-label {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 400;
+}
+
+.meta-value {
+  font-weight: 600;
+
+  &.highlight-yellow {
+    color: #facc15;
+    background: rgba(250, 204, 21, 0.15);
+    border: 1px solid rgba(250, 204, 21, 0.3);
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+  }
+}
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+}
+
+/* Right Column Showcase */
+.card-glow-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--card-bg, rgba(255, 255, 255, 0.75));
+  border: 1px solid var(--border-color, rgba(139, 92, 246, 0.2));
+  box-shadow: 0 12px 40px rgba(139, 92, 246, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.ceremony-stage {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+  background: linear-gradient(180deg, rgba(245, 243, 255, 0.5) 0%, rgba(237, 233, 254, 0.8) 100%);
+  min-height: 480px;
+}
+
+:host-context(body.dark-theme) {
+  .card-glow-wrapper {
+    background: rgba(18, 13, 38, 0.85);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  }
+  .ceremony-stage {
+    background: radial-gradient(circle at 50% 30%, #1c1538 0%, #0a0618 100%);
+  }
+}
+
+/* Header */
+.stage-header {
+  border-bottom: 1px solid rgba(139, 92, 246, 0.15);
+  padding-bottom: 0.75rem;
+}
+
+.header-tag {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 0.75rem;
+  color: #7c3aed;
+  letter-spacing: 0.1em;
+}
+
+:host-context(body.dark-theme) .header-tag {
+  color: #fbbf24;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 10px #ef4444;
+  animation: pulse 1.5s infinite;
+}
+
+.stage-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 0.78rem;
+  color: var(--text-primary, #1e1b4b);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+.dot-red { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
+.dot-yellow { background: #f59e0b; box-shadow: 0 0 6px #f59e0b; }
+.dot-blue { background: #3b82f6; box-shadow: 0 0 6px #3b82f6; }
+.dot-green { background: #10b981; box-shadow: 0 0 6px #10b981; }
+
+.sec-badge {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #ffffff;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 0.68rem;
+  padding: 0.3rem 0.85rem;
+  border-radius: 50px;
+  letter-spacing: 0.08em;
+  box-shadow: 0 2px 14px rgba(239, 68, 68, 0.4);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.badge-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 8px #ffffff;
+  animation: pulse 1.5s infinite;
+}
+
+/* Giant Digit Cards */
+.digit-cards-wrap {
+  perspective: 1000px;
+}
+
+.digit-card {
+  width: 90px;
+  height: 145px;
+  background: linear-gradient(180deg, #ffffff 0%, #ede9fe 100%);
+  border: 2px solid #8b5cf6;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12px 30px rgba(139, 92, 246, 0.2), inset 0 2px 0 #ffffff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 40px rgba(124, 58, 237, 0.35);
+  }
+}
+
+:host-context(body.dark-theme) .digit-card {
+  background: linear-gradient(180deg, #2a214e 0%, #150f2e 100%);
+  border-color: #a855f7;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+@media (min-width: 640px) {
+  .digit-card {
+    width: 110px;
+    height: 170px;
+  }
+}
+
+.digit-number {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 5rem;
+  color: #6d28d9;
+  line-height: 1;
+  text-shadow: 0 4px 16px rgba(109, 40, 217, 0.25);
+  letter-spacing: -0.02em;
+}
+
+:host-context(body.dark-theme) .digit-number {
+  color: #ffc107;
+  text-shadow: 0 0 25px rgba(255, 193, 7, 0.7);
+}
+
+@media (min-width: 640px) {
+  .digit-number {
+    font-size: 6rem;
+  }
+}
+
+.sk-digit-card {
+  background: rgba(139, 92, 246, 0.1);
+  animation: pulse-sk 1.5s infinite ease-in-out;
+}
+
+/* ================================================================
+   GRAND WINNER CEREMONY TICKET CARD (Matching reference image)
+   ================================================================ */
+/* ================================================================
+   GRAND WINNER CEREMONY TICKET CARD (Matching reference image)
+   ================================================================ */
+.stage-main {
+  width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.grand-ceremony-card {
+  box-sizing: border-box;
+  width: calc(100% - 2.5rem);
+  max-width: 1100px;
+  min-height: 400px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #fffdf5 0%, #fef3c7 50%, #fde68a 100%);
+  border: 4px solid #f59e0b;
+  border-radius: 24px;
+  padding: 1.8rem 2.2rem;
+  box-shadow: 0 16px 50px rgba(245, 158, 11, 0.3), inset 0 0 35px rgba(254, 243, 199, 0.85);
+  animation: fadeInCenter 0.4s ease-out;
+  position: relative;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+:host-context(body.dark-theme) .grand-ceremony-card {
+  background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 50%, #020617 100%);
+  border-color: #f59e0b;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.65), inset 0 0 30px rgba(245, 158, 11, 0.15);
+}
+
+/* ================================================================
+   PURE CSS LUXURY WINNER BADGE (Exact User Prompt Specifications)
+   ================================================================ */
+.wreath-medallion-wrap {
+  flex-shrink: 0;
+  position: relative;
+}
+
+.winner-badge {
+  position: relative;
+  width: 155px;
+  height: 155px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFD54A 0%, #FFC107 40%, #B8860B 100%);
+  padding: 7px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.8), inset 0 -4px 6px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Gold Crown Top Center */
+.winner-badge .crown {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
+  z-index: 10;
+  animation: floatCrown 3s ease-in-out infinite;
+}
+
+/* Red Ribbon Top Right Corner Behind Badge */
+.winner-badge .ribbon {
+  position: absolute;
+  top: -2px;
+  right: -6px;
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, #EF4444 0%, #991B1B 100%);
+  border-radius: 4px;
+  transform: rotate(25deg);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  z-index: 1;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -7px;
+    right: 7px;
+    border-width: 7px 7px 0;
+    border-style: solid;
+    border-color: #7F1D1D transparent;
+  }
+}
+
+/* Laurel Wreath Left & Right */
+.winner-badge .laurel {
+  position: absolute;
+  top: 50%;
+  width: 28px;
+  height: 110px;
+  transform: translateY(-50%);
+  pointer-events: none;
+
+  &.left {
+    left: -18px;
+    border-left: 5px solid #FFC107;
+    border-radius: 50% 0 0 50%;
+    box-shadow: -4px 0 10px rgba(245, 158, 11, 0.4);
+  }
+
+  &.right {
+    right: -18px;
+    border-right: 5px solid #FFC107;
+    border-radius: 0 50% 50% 0%;
+    box-shadow: 4px 0 10px rgba(245, 158, 11, 0.4);
+  }
+}
+
+/* Dark Brown Glossy Center */
+.winner-badge .badge-center {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #4A2C11 0%, #3B220D 50%, #1E1208 100%);
+  border: 4px solid #FFC107;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.85), 0 0 16px rgba(255, 193, 7, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+
+  /* 3-Second Moving Shine Sweep Animation */
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -60%;
+    width: 50%;
+    height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+    transform: rotate(30deg);
+    animation: shineSweep 3s infinite ease-in-out;
+  }
+}
+
+/* Center Metallic Gold Number */
+.winner-badge .number {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 5rem;
+  font-weight: 900;
+  line-height: 1;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFD54A 30%, #FFC107 70%, #B8860B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.9));
+}
+
+/* Superscript Rank Suffix */
+.winner-badge sup {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 2rem;
+  font-weight: 900;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFD54A 40%, #B8860B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  align-self: flex-start;
+  margin-top: 1.2rem;
+  margin-left: 0.15rem;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.9));
+}
+
+@keyframes floatCrown {
+  0%, 100% { transform: translateX(-50%) translateY(0) rotate(0deg); }
+  50% { transform: translateX(-50%) translateY(-5px) rotate(4deg); }
+}
+
+@keyframes shineSweep {
+  0% { left: -60%; }
+  60%, 100% { left: 140%; }
+}
+
+/* ================================================================
+   3D GRAND RED RIBBON BANNER (Matching reference image)
+   ================================================================ */
+.ribbon-banner-3d {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #e11d48 0%, #be123c 45%, #9f1239 100%);
+  color: #ffffff;
+  padding: 0.55rem 2.8rem;
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(159, 18, 57, 0.45), inset 0 2px 2px rgba(255, 255, 255, 0.45);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.5);
+  border-bottom: 2.5px solid #710e2b;
+  margin-bottom: 0.6rem;
+  z-index: 5;
+
+  /* Swallowtail Wings Left & Right */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: -28px;
+    width: 34px;
+    height: 100%;
+    background: linear-gradient(180deg, #be123c 0%, #881337 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 14px 50%);
+    box-shadow: -4px 6px 12px rgba(0, 0, 0, 0.35);
+    z-index: -1;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    right: -28px;
+    width: 34px;
+    height: 100%;
+    background: linear-gradient(180deg, #be123c 0%, #881337 100%);
+    clip-path: polygon(0 0, 100% 0, 20px 50%, 100% 100%, 0 100%);
+    box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.35);
+    z-index: -1;
+  }
+}
+
+.ribbon-banner-text,
+.ribbon-text {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 1.25rem;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+  text-transform: uppercase;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* 3D Ribbon Fold Triangles */
+.ribbon-fold-left {
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  border-width: 8px 8px 0 0;
+  border-style: solid;
+  border-color: #4c0519 transparent;
+}
+
+.ribbon-fold-right {
+  position: absolute;
+  bottom: -8px;
+  right: 0;
+  border-width: 8px 0 0 8px;
+  border-style: solid;
+  border-color: #4c0519 transparent;
+}
+
+/* Winner Name Headline */
+.winner-label-sub {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #78350f;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+:host-context(body.dark-theme) .winner-label-sub {
+  color: #fbbf24;
+}
+
+.winner-headline {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 5.5rem;
+  color: #881337;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  margin: 0.25rem 0;
+  text-shadow: 0 6px 24px rgba(136, 19, 55, 0.35);
+}
+
+:host-context(body.dark-theme) .winner-headline {
+  color: #ffffff;
+  text-shadow: 0 0 35px rgba(255, 255, 255, 0.6);
+}
+
+/* Coupon Divider Line */
+.coupon-divider-row {
+  max-width: 380px;
+}
+
+.coupon-line {
+  height: 3px;
+  flex: 1;
+  background: linear-gradient(90deg, transparent, #b45309, transparent);
+}
+
+:host-context(body.dark-theme) .coupon-line {
+  background: linear-gradient(90deg, transparent, #f59e0b, transparent);
+}
+
+.coupon-label-text {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 1.35rem;
+  color: #451a03;
+}
+
+:host-context(body.dark-theme) .coupon-label-text {
+  color: #fef08a;
+}
+
+/* Red Coupon Box */
+.coupon-red-card {
+  background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%);
+  border: 4px solid #ef4444;
+  border-radius: 22px;
+  padding: 0.65rem 4rem;
+  box-shadow: 0 12px 35px rgba(127, 29, 29, 0.55);
+}
+
+.coupon-red-digits {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 4.5rem;
+  color: #ffffff;
+  letter-spacing: 0.08em;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+/* Agent & Date Chips */
+.agent-chip {
+  background: linear-gradient(135deg, #78350f, #451a03);
+  color: #fef08a;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 1.05rem;
+  padding: 0.5rem 1.4rem;
+  border-radius: 50px;
+  box-shadow: 0 4px 14px rgba(120, 53, 15, 0.35);
+}
+
+:host-context(body.dark-theme) .agent-chip {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #000000;
+}
+
+.date-chip {
+  background: rgba(120, 53, 15, 0.12);
+  border: 1.5px solid rgba(120, 53, 15, 0.3);
+  color: #78350f;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+}
+
+:host-context(body.dark-theme) .date-chip {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+}
+
+/* Right Side Church Emblem Image */
+.church-emblem-wrap {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.church-emblem-img {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  border-radius: 16px;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.45));
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes bounce-crown {
+  from { transform: translateY(0) rotate(0deg); }
+  to { transform: translateY(-4px) rotate(8deg); }
+}
+
+@keyframes fadeInCenter {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+
+/* Empty state */
+.empty-glow-icon {
+  font-size: 3.5rem;
+  display: block;
+}
+.text-gold { color: #d97706; font-weight: 800; }
+.text-muted { color: #6b7280; font-size: 0.85rem; }
+
+/* Bottom Control Bar */
+.stage-control-bar {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 18px;
+  margin-top: 1rem;
+  box-shadow: 0 4px 16px rgba(139, 92, 246, 0.08);
+}
+
+:host-context(body.dark-theme) .stage-control-bar {
+  background: rgba(18, 13, 38, 0.9);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.btn-start-draw {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.6rem;
+  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+  border: none;
+  border-radius: 12px;
+  color: #ffffff;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.35);
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #6d28d9 0%, #4f46e5 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(124, 58, 237, 0.5);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .btn-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.stat-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 0.65rem;
+  color: #6b21a8;
+  letter-spacing: 0.08em;
+}
+
+:host-context(body.dark-theme) .stat-title {
+  color: #a78bfa;
+}
+
+.stat-val {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 1.1rem;
+  line-height: 1.2;
+  color: #1e1b4b;
+}
+
+:host-context(body.dark-theme) .stat-val {
+  color: #ffffff;
+}
+
+.progress-item {
+  min-width: 140px;
+}
+
+.bar-outer {
+  width: 90px;
+  height: 7px;
+  background: rgba(139, 92, 246, 0.15);
+  border-radius: 50px;
+  overflow: hidden;
+}
+
+.bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, #7c3aed, #a855f7);
+  border-radius: 50px;
+  transition: width 0.4s ease;
+}
+
+.progress-pct {
+  font-size: 0.72rem;
+  color: #6b21a8;
+  font-weight: 700;
+}
+
+:host-context(body.dark-theme) .progress-pct {
+  color: #c084fc;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes pulse-sk {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}

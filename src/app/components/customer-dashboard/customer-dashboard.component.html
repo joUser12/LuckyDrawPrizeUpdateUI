@@ -1,0 +1,32 @@
+<!-- Sticky Header -->
+<app-header></app-header>
+
+<!-- Main Container -->
+<main class="dashboard-wrapper py-4 flex-grow-1">
+  <div class="dash-container px-2 px-md-3">
+    
+
+    <!-- 2-Column Responsive Ceremony Section -->
+    <div class="ceremony-grid">
+      
+      <!-- LEFT PANEL: Hall of Winners -->
+      <div class="ceremony-col-left">
+        <app-live-feed class="h-full block"></app-live-feed>
+      </div>
+
+      <!-- MAIN PANEL: Ceremony Display Stage -->
+      <div class="ceremony-col-main">
+        <app-latest-winner class="h-full block"></app-latest-winner>
+      </div>
+
+    </div>
+
+
+  </div>
+</main>
+
+<!-- Footer -->
+<app-footer></app-footer>
+
+<!-- Full Screen Loader Overlay -->
+<app-loader></app-loader>

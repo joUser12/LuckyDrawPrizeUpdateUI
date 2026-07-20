@@ -1,0 +1,46 @@
+<header class="navbar-glass sticky flex items-center justify-between px-4">
+    
+  <!-- Left Logo & Title -->
+  <div class="flex items-center gap-3">
+    <div class="logo-wrapper">
+      <img src="church-logo.jpg" alt="Church Logo" class="church-logo-icon" />
+    </div>
+    <div class="flex flex-col">
+      <div class="flex items-center gap-2">
+        <span class="app-name">St. Little Flower Malankara Syrian Catholic Church</span>
+        <span class="status-badge">
+          <span class="pulse-dot"></span>
+          LIVE
+        </span>
+      </div>
+      <span class="app-subname hide-sm">Pushpagiri</span>
+    </div>
+  </div>
+
+  <!-- Right Controls -->
+  <div class="flex items-center gap-2">
+    
+
+
+    <!-- Dark Mode Button -->
+    <button mat-icon-button class="btn-icon-glass" (click)="toggleDarkMode()" title="Toggle Dark/Light Mode">
+      <mat-icon>{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    </button>
+
+    <!-- Logout -->
+    <button mat-stroked-button class="btn-staff hide-sm flex items-center gap-1" routerLink="/">
+      <mat-icon>logout</mat-icon>
+      Logout
+    </button>
+
+    <!-- User Profile -->
+    <div class="profile-card flex items-center gap-2">
+      <img src="https://i.pravatar.cc/150?img=3" alt="Admin Avatar" class="profile-avatar">
+      <div class="profile-info hide-md flex flex-col">
+        <span class="profile-name">Admin Portal</span>
+        <span class="profile-role">Moderator</span>
+      </div>
+    </div>
+
+  </div>
+</header>

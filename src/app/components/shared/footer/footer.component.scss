@@ -1,0 +1,56 @@
+.footer-glass {
+  background: var(--footer-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  padding: 1rem 2rem;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.footer-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.copyright-text {
+  margin: 0;
+}
+
+.footer-logo {
+  font-size: 1.1rem;
+}
+
+.footer-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.copyright-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  opacity: 0.85;
+}
+
+.footer-links {
+  font-family: 'Inter', sans-serif;
+}
+
+.footer-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--theme-purple);
+  }
+}
