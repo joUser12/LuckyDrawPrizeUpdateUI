@@ -1,7 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Winner } from '../models/winner.model';
-import { SignalrService } from './signalr.service';
+import { SseService } from './sse.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '../../environments/environment';
 
@@ -36,11 +36,11 @@ export class WinnerService {
 
   constructor(
     private http: HttpClient,
-    private signalrService: SignalrService,
+    private sseService: SseService,
     private snackBar: MatSnackBar
   ) {
     this.initializeData();
-    this.setupSignalRListener();
+    this.setupSseListener();
   }
 
   private initializeData(): void {
@@ -89,8 +89,8 @@ export class WinnerService {
   }
 
 
-  private setupSignalRListener(): void {
-    this.signalrService.newWinner$.subscribe((newWinner: Winner) => {
+  private setupSseListener(): void {
+    this.sseService.newWinner$.subscribe((newWinner: Winner) => {
       this.handleNewWinnerDrawn(newWinner);
     });
   }
@@ -137,14 +137,14 @@ export class WinnerService {
    * Helper to trigger simulation manually
    */
   public triggerManualDraw(): void {
-    this.signalrService.simulateNewWinner();
+    // Manual local trigger
   }
 
   /**
    * Adds a new winner manually from the Admin portal with 5-second reveal loader trigger.
    */
   public addWinner(winner: Winner): void {
-    this.signalrService.simulateNewWinner(winner);
+    this.sseService.broadcastNewWinner(winner);
   }
 
   /**
