@@ -864,6 +864,23 @@
 .text-gold { color: #d97706; font-weight: 800; }
 .text-muted { color: #6b7280; font-size: 0.85rem; }
 
+.loading-spinner {
+  width: 42px;
+  height: 42px;
+  border: 4px solid rgba(245, 158, 11, 0.2);
+  border-top: 4px solid #f59e0b;
+  border-right: 4px solid #fef08a;
+  border-radius: 50%;
+  animation: goldenSpin 1s linear infinite;
+  display: inline-block;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.5);
+}
+
+@keyframes goldenSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* Bottom Control Bar */
 .stage-control-bar {
   background: rgba(255, 255, 255, 0.85);
