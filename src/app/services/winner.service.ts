@@ -34,6 +34,8 @@ export class WinnerService {
   // A signal to trigger celebration animation in components
   public triggerCelebration = signal<number>(0);
 
+  private currentlyProcessingCoupon: string | null = null;
+
   constructor(
     private http: HttpClient,
     private sseService: SseService,
@@ -88,7 +90,6 @@ export class WinnerService {
     return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
   }
 
-
   private setupSseListener(): void {
     this.sseService.newWinner$.subscribe((newWinner: Winner) => {
       this.handleNewWinnerDrawn(newWinner);
@@ -96,6 +97,9 @@ export class WinnerService {
   }
 
   private handleNewWinnerDrawn(newWinner: Winner): void {
+    if (this.currentlyProcessingCoupon === newWinner.couponNumber) return;
+    this.currentlyProcessingCoupon = newWinner.couponNumber;
+
     // 1. Show 5-second loader in Customer Dashboard
     this.showLoaderSignal.set(true);
 
@@ -123,6 +127,7 @@ export class WinnerService {
 
       // Hide 5-second loader
       this.showLoaderSignal.set(false);
+      this.currentlyProcessingCoupon = null;
 
       // Trigger confetti celebration animation
       this.triggerCelebration.update(v => v + 1);
