@@ -20,8 +20,6 @@
   <!-- Right Controls -->
   <div class="flex items-center gap-2">
     
-
-
     <!-- Dark Mode Button -->
     <button mat-icon-button class="btn-icon-glass" (click)="toggleDarkMode()" title="Toggle Dark/Light Mode">
       <mat-icon>{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
@@ -32,15 +30,6 @@
       <mat-icon>logout</mat-icon>
       Logout
     </button>
-
-    <!-- User Profile -->
-    <div class="profile-card flex items-center gap-2">
-      <img src="https://i.pravatar.cc/150?img=3" alt="Admin Avatar" class="profile-avatar">
-      <div class="profile-info hide-md flex flex-col">
-        <span class="profile-name">Admin Portal</span>
-        <span class="profile-role">Moderator</span>
-      </div>
-    </div>
 
   </div>
 </header>

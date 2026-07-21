@@ -1,17 +1,31 @@
 @if (winnerService.showLoader()) {
   <div class="loader-overlay flex flex-col items-center justify-center">
     
+    <!-- Celebration Confetti Layer -->
+    <canvas #loaderConfettiCanvas class="loader-confetti-canvas"></canvas>
+
     <!-- Ambient Radial Particle Glows -->
     <div class="fullscreen-glow-light"></div>
     <div class="soundwave-ring r1"></div>
     <div class="soundwave-ring r2"></div>
+    <div class="soundwave-ring r3"></div>
+
+    <!-- Celebration Beams -->
+    <div class="celebration-beam b1"></div>
+    <div class="celebration-beam b2"></div>
 
     <!-- Fullscreen Giant Animated Countdown Wrapper -->
     <div class="dramatic-countdown-wrap flex flex-col items-center justify-center text-center">
       
-      <!-- Giant 3D Animated Number / Text -->
-      <div class="giant-countdown-num" [class.is-text]="countdown() === 'LET\'S GO!'">
-        {{ countdown() }}
+      <!-- Golden Spinner Wrapper around Giant Countdown Number -->
+      <div class="golden-spinner-wrapper relative flex items-center justify-center">
+        <div class="golden-spinner-ring"></div>
+        <div class="golden-spinner-inner-glow"></div>
+        
+        <!-- Giant 3D Animated Number / Text -->
+        <div class="giant-countdown-num" [class.is-text]="countdown() === 'LET\'S GO!'">
+          {{ countdown() }}
+        </div>
       </div>
 
       <!-- Subtitle Badge -->
