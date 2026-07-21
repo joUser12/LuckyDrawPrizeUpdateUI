@@ -74,6 +74,15 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="w-full admin-field">
+              <mat-label>Prize Name</mat-label>
+              <input matInput formControlName="prizeName" placeholder="Enter Prize Name (e.g. Smart LED TV)" />
+              <mat-icon matSuffix>card_giftcard</mat-icon>
+              @if (addForm.get('prizeName')?.invalid && addForm.get('prizeName')?.touched) {
+              <mat-error>Prize name is required</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full admin-field">
               <mat-label>Agent Name</mat-label>
               <input matInput formControlName="agentName" placeholder="Enter Agent Name" />
               <mat-icon matSuffix>support_agent</mat-icon>
@@ -104,7 +113,7 @@
 
     <!-- Winners Table — Desktop (md+) -->
     <div class="table-wrapper desktop-only">
-      @if (winnerService.isInitialLoading()) {
+      @if (isLoading()) {
       <div class="table-skeleton">
         @for (i of [1,2,3,4,5]; track i) {
         <div class="skeleton-row flex items-center gap-3 p-3">
@@ -125,34 +134,35 @@
               <th>Winner</th>
               <th>Coupon No.</th>
               <th>Prize</th>
+              <th>Agent</th>
               <th>Date</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            @if (winnerService.allWinners().length === 0) {
+            @if (coupons().length === 0) {
             <tr>
-              <td colspan="5" class="empty-row text-center py-5">
+              <td colspan="6" class="empty-row text-center py-5">
                 <span style="font-size:2rem">📭</span>
                 <p class="mt-2">No winners found. Add your first winner.</p>
               </td>
             </tr>
             }
-            @for (winner of visibleWinners(); track winner.couponNumber + '_' + $index; let first = $first) {
-            <tr>
+            @for (coupon of visibleCoupons(); track coupon._id; let first = $first) {
+            <tr [class.new-row]="first && !isLoading()">
               <td>
-                <div class="customer-cell">{{ winner.customerName }}</div>
-                <div class="agent-cell-sub">{{ winner.agentName }}</div>
+                <div class="customer-cell">{{ coupon.customerName }}</div>
               </td>
-              <td><span class="coupon-cell">{{ winner.couponNumber }}</span></td>
+              <td><span class="coupon-cell">{{ coupon.couponNumber }}</span></td>
               <td>
-                <span class="prize-cell" [class.first-prize]="winner.prizeNumber === '1'">
-                  Prize {{ winner.prizeNumber }}
+                <span class="prize-cell" [class.first-prize]="coupon.prizeNumber === '1'">
+                  Prize No. {{ coupon.prizeNumber }} - {{ coupon.prizeName }}
                 </span>
               </td>
-              <td><span class="date-cell">{{ winner.createdDate }}</span></td>
+              <td><div class="agent-cell-sub">{{ coupon.agentName }}</div></td>
+              <td><span class="date-cell">{{ coupon.createdAt | date:'dd/MM/yyyy' }}</span></td>
               <td>
-                <button class="btn-delete" (click)="deleteWinner(winner.couponNumber)" title="Remove winner">
+                <button class="btn-delete" (click)="deleteWinner(coupon._id!, coupon.couponNumber)" title="Remove winner">
                   <mat-icon>delete_outline</mat-icon>
                 </button>
               </td>
@@ -166,37 +176,37 @@
 
     <!-- Winners Cards — Mobile only -->
     <div class="mobile-list mobile-only">
-      @if (winnerService.isInitialLoading()) {
+      @if (isLoading()) {
       @for (i of [1,2,3]; track i) {
       <div class="m-card m-card-skeleton">
         <div class="sk-line sk-w60 mb-1"></div>
         <div class="sk-line sk-w40"></div>
       </div>
       }
-      } @else if (winnerService.allWinners().length === 0) {
+      } @else if (coupons().length === 0) {
       <div class="m-empty">
         <span>📭</span>
         <p>No winners yet. Add your first winner.</p>
       </div>
       } @else {
-      @for (winner of visibleWinners(); track winner.couponNumber + '_' + $index; let first = $first) {
+      @for (coupon of visibleCoupons(); track coupon._id; let first = $first) {
       <div class="m-card" [class.m-card-new]="first">
         @if (first) { <span class="m-new-badge">NEW</span> }
         <div class="m-card-top">
           <div>
-            <div class="m-name">{{ winner.customerName }}</div>
-            <div class="m-agent">{{ winner.agentName }}</div>
+            <div class="m-name">{{ coupon.customerName }}</div>
+            <div class="m-agent">{{ coupon.agentName }}</div>
           </div>
-          <button class="btn-delete" (click)="deleteWinner(winner.couponNumber)">
+          <button class="btn-delete" (click)="deleteWinner(coupon._id!, coupon.couponNumber)">
             <mat-icon>delete_outline</mat-icon>
           </button>
         </div>
         <div class="m-card-bottom">
-          <span class="coupon-cell">🎟 {{ winner.couponNumber }}</span>
-          <span class="prize-cell" [class.first-prize]="winner.prizeNumber === '1'">
-            🎁 Prize {{ winner.prizeNumber }}
+          <span class="coupon-cell">🎟 {{ coupon.couponNumber }}</span>
+          <span class="prize-cell" [class.first-prize]="coupon.prizeNumber === '1'">
+            🎁 Prize No. {{ coupon.prizeNumber }} - {{ coupon.prizeName }}
           </span>
-          <span class="date-cell">📅 {{ winner.createdDate }}</span>
+          <span class="date-cell">📅 {{ coupon.createdAt | date:'dd/MM/yyyy' }}</span>
         </div>
       </div>
       }
@@ -207,11 +217,11 @@
 
 
     <!-- Show More / Show Less -->
-    @if (hasMore() && !winnerService.isInitialLoading()) {
+    @if (hasMore() && !isLoading()) {
     <div class="show-more-row">
       <button class="btn-show-more" (click)="toggleShowAll()">
         <mat-icon>{{ showAll() ? 'expand_less' : 'expand_more' }}</mat-icon>
-        {{ showAll() ? 'Show Less' : 'Show ' + (winnerService.allWinners().length - PAGE_SIZE) + ' More Winners' }}
+        {{ showAll() ? 'Show Less' : 'Show ' + (coupons().length - PAGE_SIZE) + ' More Winners' }}
       </button>
     </div>
     }

@@ -461,6 +461,41 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.9));
+}
+
+/* Badge number row (number + sup side by side) */
+.winner-badge .badge-number-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+/* Curved SVG Prize overlay */
+.winner-badge .badge-curve-svg {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 140px;
+  pointer-events: none;
+  z-index: 5;
+  overflow: visible;
+}
+
+.winner-badge .curved-prize-text {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  fill: #FFD54A;
+  paint-order: stroke;
+  stroke: rgba(0,0,0,0.5);
+  stroke-width: 1.5px;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.85));
 }
 
 /* Gold Crown Top Center */
@@ -532,6 +567,7 @@
   border: 4px solid #FFC107;
   box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.85), 0 0 16px rgba(255, 193, 7, 0.45);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
@@ -576,6 +612,21 @@
   margin-top: 1.2rem;
   margin-left: 0.15rem;
   filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.9));
+}
+
+/* Prize Label below number */
+.winner-badge .prize-label {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #FFD54A 0%, #FFC107 60%, #B8860B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+  margin-top: -0.4rem;
+  line-height: 1;
 }
 
 @keyframes floatCrown {

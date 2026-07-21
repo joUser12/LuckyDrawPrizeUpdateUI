@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -34,7 +35,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.minLength(3)]],
@@ -53,17 +55,28 @@ export class LoginComponent {
 
     this.isSubmitting.set(true);
 
-    // Simulate API authentication check
-    setTimeout(() => {
-      this.isSubmitting.set(false);
-      
-      const username = this.loginForm.value.email as string;
-      const isAdmin = username.toLowerCase().trim() === 'admin';
-      
+    const { email, password } = this.loginForm.value;
 
+    this.authService.login({ email, password }).subscribe({
+      next: (res) => {
+        this.isSubmitting.set(false);
+        this.snackBar.open(`Welcome, ${res.user.name}!`, 'Close', { duration: 3000 });
 
-      // Admin goes to admin dashboard, others to customer portal
-      this.router.navigate([isAdmin ? '/admin' : '/dashboard']);
-    }, 1800);
+        // Route based on role
+        if (res.user.role === 'admin') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/dashboard']);
+        }
+      },
+      error: (err) => {
+        this.isSubmitting.set(false);
+        const msg = err?.error?.message || 'Login failed. Please check your credentials.';
+        this.snackBar.open(msg, 'Close', {
+          duration: 4000,
+          panelClass: ['snack-error']
+        });
+      }
+    });
   }
 }

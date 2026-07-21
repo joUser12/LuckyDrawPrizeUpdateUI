@@ -1,7 +1,9 @@
 import { Injectable, signal, computed } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Winner } from '../models/winner.model';
 import { SignalrService } from './signalr.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +35,7 @@ export class WinnerService {
   public triggerCelebration = signal<number>(0);
 
   constructor(
+    private http: HttpClient,
     private signalrService: SignalrService,
     private snackBar: MatSnackBar
   ) {
@@ -41,90 +44,50 @@ export class WinnerService {
   }
 
   private initializeData(): void {
-    // Simulating initial API call latency
-    setTimeout(() => {
-      const initialWinners: Winner[] = [
-        {
-          couponNumber: '122',
-          prizeName: 'Cooker',
-          prizeNumber: '2',
-          customerName: 'john',
-          agentName: 'JOY S',
-          createdDate: '19/07/2026',
-          avatarUrl: 'https://i.pravatar.cc/150?img=11',
-          timeString: '2 mins ago'
-        },
-        {
-          couponNumber: '788',
-          prizeName: 'Cooker',
-          prizeNumber: '1',
-          customerName: 'johnnnn',
-          agentName: 'JOY S',
-          createdDate: '19/07/2026',
-          avatarUrl: 'https://i.pravatar.cc/150?img=12',
-          timeString: '10 mins ago'
-        },
-        {
-          couponNumber: '95',
-          prizeName: 'Smart LED TV',
-          prizeNumber: '1',
-          customerName: 'Emily Watson',
-          agentName: 'ALEX M',
-          createdDate: '18/07/2026',
-          avatarUrl: 'https://i.pravatar.cc/150?img=20',
-          timeString: '1 hour ago'
-        },
-        {
-          couponNumber: '412',
-          prizeName: 'Refrigerator',
-          prizeNumber: '3',
-          customerName: 'David Miller',
-          agentName: 'ROSE T',
-          createdDate: '18/07/2026',
-          avatarUrl: 'https://i.pravatar.cc/150?img=33',
-          timeString: '3 hours ago'
-        },
-        {
-          couponNumber: '304',
-          prizeName: 'Microwave Oven',
-          prizeNumber: '4',
-          customerName: 'Sarah Connor',
-          agentName: 'NIK K',
-          createdDate: '17/07/2026',
-          avatarUrl: 'https://i.pravatar.cc/150?img=47',
-          timeString: '1 day ago'
-        },
-        {
-          couponNumber: '159',
-          prizeName: 'Air Fryer',
-          prizeNumber: '5',
-          customerName: 'Michael Chang',
-          agentName: 'SAM P',
-          createdDate: '17/07/2026',
-          avatarUrl: 'https://i.pravatar.cc/150?img=65',
-          timeString: '1 day ago'
-        },
-        {
-          couponNumber: '281',
-          prizeName: 'Smart Watch',
-          prizeNumber: '8',
-          customerName: 'Robert Dow',
-          agentName: 'KUMAR G',
-          createdDate: '16/07/2026',
-          avatarUrl: 'https://i.pravatar.cc/150?img=52',
-          timeString: '2 days ago'
-        }
-      ];
+    this.http.get<{ success: boolean; coupons: any[] }>(`${environment.apiUrl}/coupons/public`)
+      .subscribe({
+        next: (response) => {
+          if (response.success && response.coupons.length > 0) {
+            const winners: Winner[] = response.coupons.map((c: any) => ({
+              couponNumber: c.couponNumber,
+              prizeName: c.prizeName,
+              prizeNumber: c.prizeNumber,
+              customerName: c.customerName,
+              agentName: c.agentName,
+              createdDate: new Date(c.createdAt).toLocaleDateString('en-GB'),
+              avatarUrl: '',
+              timeString: this.getTimeAgo(c.createdAt)
+            }));
 
-      this.allWinnersSignal.set(initialWinners);
-      // Latest grand winner defaults to the first one in the list (john)
-      this.latestWinnerSignal.set(initialWinners[0]);
-      // First prize winner is the one with prizeNumber '1' and prizeName 'Cooker' (johnnnn, Coupon 788)
-      this.firstPrizeWinnerSignal.set(initialWinners[1]);
-      
-      this.isInitialLoadingSignal.set(false);
-    }, 1500); // 1.5 second initial load skeleton simulator
+            this.allWinnersSignal.set(winners);
+            // Latest winner = most recent entry (first in sorted list)
+            this.latestWinnerSignal.set(winners[0]);
+            // First prize winner = first one with prizeNumber '1'
+            const firstPrize = winners.find(w => w.prizeNumber === '1');
+            this.firstPrizeWinnerSignal.set(firstPrize || null);
+          }
+          this.isInitialLoadingSignal.set(false);
+        },
+        error: (err) => {
+          console.error('Failed to load winners from API:', err);
+          this.isInitialLoadingSignal.set(false);
+        }
+      });
   }
+
+  private getTimeAgo(dateString: string): string {
+    const now = new Date();
+    const past = new Date(dateString);
+    const diffMs = now.getTime() - past.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
+    const diffHrs = Math.floor(diffMins / 60);
+    if (diffHrs < 24) return `${diffHrs} hour${diffHrs > 1 ? 's' : ''} ago`;
+    const diffDays = Math.floor(diffHrs / 24);
+    return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+  }
+
 
   private setupSignalRListener(): void {
     this.signalrService.newWinner$.subscribe((newWinner: Winner) => {

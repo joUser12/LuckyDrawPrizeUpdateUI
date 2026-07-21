@@ -17,42 +17,39 @@
   <!-- Content List -->
   <div class="hall-content flex-grow-1 overflow-auto py-2">
     @if (winnerService.isInitialLoading()) {
-      <div class="skeleton-hall-list flex flex-col gap-2">
-        @for (i of [1, 2, 3, 4]; track i) {
-          <div class="sk-hall-item"></div>
-        }
-      </div>
+    <div class="skeleton-hall-list flex flex-col gap-2">
+      @for (i of [1, 2, 3, 4]; track i) {
+      <div class="sk-hall-item"></div>
+      }
+    </div>
     } @else {
-      <div class="hall-list flex flex-col gap-2">
-        @if (winnerService.allWinners().length === 0) {
-          <div class="text-center py-4 text-muted">
-            <span>📭</span>
-            <p class="mt-1">No winners yet</p>
-          </div>
-        } @else {
-          @for (winner of winnerService.allWinners(); track winner.couponNumber; let idx = $index; let first = $first) {
-            <div class="hall-item" [class.hall-item-first]="first">
-              
-              <!-- Rank Badge -->
-              <div class="rank-badge" [class.rank-gold]="first">
-                {{ idx + 1 }}{{ idx === 0 ? 'st' : idx === 1 ? 'nd' : idx === 2 ? 'rd' : 'th' }}
-              </div>
-
-              <!-- Info -->
-              <div class="hall-info flex-grow-1">
-                <div class="hall-coupon">{{ winner.couponNumber }}</div>
-                <div class="hall-user">{{ winner.customerName }}</div>
-              </div>
-
-              <!-- Prize pill -->
-              <div class="hall-prize">
-                {{ winner.prizeName }}
-              </div>
-
-            </div>
-          }
-        }
+    <div class="hall-list flex flex-col gap-2">
+      @if (winnerService.allWinners().length === 0) {
+      <div class="text-center py-4 text-muted">
+        <span>📭</span>
+        <p class="mt-1">No winners yet</p>
       </div>
+      } @else {
+      @for (winner of winnerService.allWinners(); track winner.couponNumber; let idx = $index; let first = $first) {
+      <div class="hall-item" [class.hall-item-first]="first">
+
+
+
+        <!-- Info -->
+        <div class="hall-info flex-grow-1">
+          <div class="hall-coupon">{{ winner.couponNumber }}</div>
+          <div class="hall-user">{{ winner.customerName }}</div>
+        </div>
+
+        <!-- Prize pill -->
+        <div class="hall-prize">
+          Prize No. {{ winner.prizeNumber }} - {{ winner.prizeName }}
+        </div>
+
+      </div>
+      }
+      }
+    </div>
     }
   </div>
 
@@ -64,4 +61,3 @@
     <span class="count-tag">{{ winnerService.allWinners().length }} Winners</span>
   </div>
 </div>
-

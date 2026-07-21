@@ -48,9 +48,20 @@
               <div class="laurel left"></div>
               <div class="laurel right"></div>
               <div class="badge-center">
-                <span class="number">{{ winner.prizeNumber }}</span>
-                <sup>{{ winner.prizeNumber === '1' ? 'st' : winner.prizeNumber === '2' ? 'nd' : winner.prizeNumber === '3' ? 'rd' : 'th' }}</sup>
+                <div class="badge-number-row">
+                  <span class="number">{{ winner.prizeNumber }}</span>
+                  <sup>{{ winner.prizeNumber === '1' ? 'st' : winner.prizeNumber === '2' ? 'nd' : winner.prizeNumber === '3' ? 'rd' : 'th' }}</sup>
+                </div>
               </div>
+              <!-- Curved Prize SVG overlay -->
+              <svg class="badge-curve-svg" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <path id="bottomArc" d="M 20,70 A 50,50 0 0,0 120,70" />
+                </defs>
+                <text class="curved-prize-text">
+                  <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">Prize</textPath>
+                </text>
+              </svg>
             </div>
           </div>
 

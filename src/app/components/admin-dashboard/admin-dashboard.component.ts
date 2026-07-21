@@ -1,5 +1,5 @@
-import { Component, signal, computed, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, signal, computed, LOCALE_ID } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -10,7 +10,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { WinnerService } from '../../services/winner.service';
+import { CouponService, Coupon } from '../../services/coupon.service';
+import { AuthService } from '../../services/auth.service';
 import { Winner } from '../../models/winner.model';
 
 @Component({
@@ -27,28 +30,29 @@ import { Winner } from '../../models/winner.model';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatTableModule
+    MatTableModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss'
 })
-export class AdminDashboardComponent {
+export class AdminDashboardComponent implements OnInit {
   showAddForm = signal<boolean>(false);
   isSubmitting = signal<boolean>(false);
+  isLoading = signal<boolean>(false);
   showAll = signal<boolean>(false);
+  coupons = signal<Coupon[]>([]);
+
   readonly PAGE_SIZE = 15;
   displayedColumns = ['avatar', 'customer', 'coupon', 'prize', 'agent', 'date', 'actions'];
 
-  /** Returns only the first 15 winners unless showAll is toggled */
-  visibleWinners = computed(() =>
+  visibleCoupons = computed(() =>
     this.showAll()
-      ? this.winnerService.allWinners()
-      : this.winnerService.allWinners().slice(0, this.PAGE_SIZE)
+      ? this.coupons()
+      : this.coupons().slice(0, this.PAGE_SIZE)
   );
 
-  hasMore = computed(() =>
-    this.winnerService.allWinners().length > this.PAGE_SIZE
-  );
+  hasMore = computed(() => this.coupons().length > this.PAGE_SIZE);
 
   toggleShowAll(): void {
     this.showAll.update(v => !v);
@@ -69,6 +73,8 @@ export class AdminDashboardComponent {
 
   constructor(
     public winnerService: WinnerService,
+    private couponService: CouponService,
+    private authService: AuthService,
     private fb: FormBuilder,
     private router: Router,
     private snackBar: MatSnackBar
@@ -77,7 +83,41 @@ export class AdminDashboardComponent {
       customerName: ['', [Validators.required, Validators.minLength(2)]],
       couponNumber: ['', [Validators.required]],
       prizeNumber:  ['', [Validators.required]],
+      prizeName:    ['', [Validators.required]],
       agentName:    ['', [Validators.required]]
+    });
+
+    this.addForm.get('prizeNumber')?.valueChanges.subscribe(pNum => {
+      const knownPrizes: Record<string, string> = {
+        '1': 'Smart LED TV', '2': 'Cooker', '3': 'Refrigerator',
+        '4': 'Microwave Oven', '5': 'Air Fryer', '6': 'Induction Cooktop',
+        '7': 'Vacuum Cleaner', '8': 'Smart Watch'
+      };
+      const numStr = String(pNum);
+      if (knownPrizes[numStr] && !this.addForm.get('prizeName')?.value) {
+        this.addForm.get('prizeName')?.setValue(knownPrizes[numStr]);
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    this.loadCoupons();
+  }
+
+  loadCoupons(): void {
+    this.isLoading.set(true);
+    this.couponService.getAllCoupons().subscribe({
+      next: (res) => {
+        if (res.success && res.coupons) {
+          this.coupons.set(res.coupons);
+        }
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Load coupons error:', err);
+        this.snackBar.open('Failed to load coupons', 'Close', { duration: 3000 });
+        this.isLoading.set(false);
+      }
     });
   }
 
@@ -92,52 +132,70 @@ export class AdminDashboardComponent {
     if (this.addForm.invalid) return;
     this.isSubmitting.set(true);
 
-    const now = new Date();
-    const day = String(now.getDate()).padStart(2, '0');
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const year = now.getFullYear();
-
     const formVal = this.addForm.value;
-    const knownPrizes: Record<string, string> = {
-      '1': 'Smart LED TV',
-      '2': 'Cooker',
-      '3': 'Refrigerator',
-      '4': 'Microwave Oven',
-      '5': 'Air Fryer',
-      '6': 'Induction Cooktop',
-      '7': 'Vacuum Cleaner',
-      '8': 'Smart Watch'
-    };
     const pNum = String(formVal.prizeNumber);
-    const computedPrizeName = knownPrizes[pNum] || `Prize ${pNum}`;
 
-    const newWinner: Winner = {
-      customerName: formVal.customerName,
+    const payload = {
       couponNumber: String(formVal.couponNumber),
+      prizeName: formVal.prizeName,
       prizeNumber: pNum,
-      prizeName: computedPrizeName,
-      agentName: formVal.agentName,
-      createdDate: `${day}/${month}/${year}`,
-      timeString: 'Just now'
+      customerName: formVal.customerName,
+      agentName: formVal.agentName
     };
 
-    setTimeout(() => {
-      this.winnerService.addWinner(newWinner);
-      this.addForm.reset();
-      this.showAddForm.set(false);
-      this.isSubmitting.set(false);
-    }, 400);
+    this.couponService.createCoupon(payload).subscribe({
+      next: (res) => {
+        this.isSubmitting.set(false);
+        if (res.success && res.coupon) {
+          // Prepend to list
+          this.coupons.update(list => [res.coupon!, ...list]);
+          // Also trigger live broadcast via WinnerService/SignalR
+          const winner: Winner = {
+            couponNumber: res.coupon.couponNumber,
+            prizeName: res.coupon.prizeName,
+            prizeNumber: res.coupon.prizeNumber,
+            customerName: res.coupon.customerName,
+            agentName: res.coupon.agentName,
+            createdDate: new Date(res.coupon.createdAt || '').toLocaleDateString('en-GB'),
+            timeString: 'Just now'
+          };
+          this.winnerService.addWinner(winner);
+        }
+        this.addForm.reset();
+        this.showAddForm.set(false);
+        this.snackBar.open('✅ Coupon added successfully!', 'Close', { duration: 3000 });
+      },
+      error: (err) => {
+        this.isSubmitting.set(false);
+        const msg = err?.error?.message || 'Failed to create coupon';
+        this.snackBar.open(msg, 'Close', { duration: 4000, panelClass: ['snack-error'] });
+      }
+    });
   }
 
-  deleteWinner(couponNumber: string): void {
-    this.winnerService.deleteWinner(couponNumber);
+  deleteWinner(id: string, couponNumber: string): void {
+    if (!confirm(`Delete coupon #${couponNumber}?`)) return;
+
+    this.couponService.deleteCoupon(id).subscribe({
+      next: () => {
+        this.coupons.update(list => list.filter(c => c._id !== id));
+        this.winnerService.deleteWinner(couponNumber);
+        this.snackBar.open('🗑️ Coupon deleted', 'Close', { duration: 2500 });
+      },
+      error: (err) => {
+        const msg = err?.error?.message || 'Failed to delete coupon';
+        this.snackBar.open(msg, 'Close', { duration: 4000, panelClass: ['snack-error'] });
+      }
+    });
   }
 
   logout(): void {
-    this.router.navigate(['/']);
+    this.authService.logout();
   }
 
   goToPortal(): void {
     this.router.navigate(['/dashboard']);
   }
 }
+
+
