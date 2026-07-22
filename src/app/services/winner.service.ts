@@ -1,7 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Winner } from '../models/winner.model';
-import { SignalrService } from './signalr.service';
+import { SseService } from './sse.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '../../environments/environment';
 
@@ -38,60 +38,11 @@ export class WinnerService {
 
   constructor(
     private http: HttpClient,
-    private signalrService: SignalrService,
+    private sseService: SseService,
     private snackBar: MatSnackBar
   ) {
     this.initializeData();
-    this.setupSignalRListener();
-    this.startPolling();
-  }
-
-  private startPolling(): void {
-    setInterval(() => {
-      this.fetchLatestCoupons();
-    }, 2500);
-  }
-
-  private fetchLatestCoupons(): void {
-    if (this.isInitialLoadingSignal()) return;
-
-    this.http.get<{ success: boolean; coupons: any[] }>(`${environment.apiUrl}/coupons/public`)
-      .subscribe({
-        next: (response) => {
-          if (!response.success || !response.coupons) return;
-
-          const serverWinners: Winner[] = response.coupons.map((c: any) => ({
-            couponNumber: c.couponNumber,
-            prizeName: c.prizeName,
-            prizeNumber: c.prizeNumber,
-            customerName: c.customerName,
-            agentName: c.agentName,
-            createdDate: new Date(c.createdAt).toLocaleDateString('en-GB'),
-            avatarUrl: '',
-            timeString: this.getTimeAgo(c.createdAt)
-          }));
-
-          if (serverWinners.length === 0) return;
-
-          const currentList = this.allWinnersSignal();
-          const latestServerWinner = serverWinners[0];
-          const isAlreadyInList = currentList.some(w => w.couponNumber === latestServerWinner.couponNumber);
-          const isCurrentlyProcessing = this.currentlyProcessingCoupon === latestServerWinner.couponNumber;
-
-          if (!isAlreadyInList && !isCurrentlyProcessing) {
-            // New winner detected from another device/tab!
-            this.handleNewWinnerDrawn(latestServerWinner);
-          } else if (!this.showLoaderSignal()) {
-            this.allWinnersSignal.set(serverWinners);
-            if (serverWinners.length > 0 && !isCurrentlyProcessing) {
-              this.latestWinnerSignal.set(serverWinners[0]);
-              const firstPrize = serverWinners.find(w => w.prizeNumber === '1');
-              this.firstPrizeWinnerSignal.set(firstPrize || null);
-            }
-          }
-        },
-        error: () => {}
-      });
+    this.setupSseListener();
   }
 
   private initializeData(): void {
@@ -139,8 +90,8 @@ export class WinnerService {
     return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
   }
 
-  private setupSignalRListener(): void {
-    this.signalrService.newWinner$.subscribe((newWinner: Winner) => {
+  private setupSseListener(): void {
+    this.sseService.newWinner$.subscribe((newWinner: Winner) => {
       this.handleNewWinnerDrawn(newWinner);
     });
   }
@@ -191,14 +142,14 @@ export class WinnerService {
    * Helper to trigger simulation manually
    */
   public triggerManualDraw(): void {
-    this.signalrService.simulateNewWinner();
+    // Manual local trigger
   }
 
   /**
    * Adds a new winner manually from the Admin portal with 5-second reveal loader trigger.
    */
   public addWinner(winner: Winner): void {
-    this.signalrService.simulateNewWinner(winner);
+    this.sseService.broadcastNewWinner(winner);
   }
 
   /**
