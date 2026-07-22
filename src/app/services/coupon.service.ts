@@ -51,6 +51,17 @@ export class CouponService {
     return this.http.post<CouponResponse>(this.apiUrl, payload);
   }
 
+  /** PUT /api/coupons/:id — Auth required */
+  updateCoupon(id: string, payload: {
+    couponNumber: string;
+    prizeName: string;
+    prizeNumber: string;
+    customerName: string;
+    agentName: string;
+  }): Observable<CouponResponse> {
+    return this.http.put<CouponResponse>(`${this.apiUrl}/${id}`, payload);
+  }
+
   /** DELETE /api/coupons/:id — Auth required */
   deleteCoupon(id: string): Observable<CouponResponse> {
     return this.http.delete<CouponResponse>(`${this.apiUrl}/${id}`);

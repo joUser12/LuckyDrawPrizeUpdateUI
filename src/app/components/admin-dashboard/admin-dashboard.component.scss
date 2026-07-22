@@ -654,6 +654,39 @@
   }
 }
 
+.btn-edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #f5f3ff;
+  border: 1px solid #ede9fe;
+  border-radius: 8px;
+  color: #7c3aed;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #ede9fe;
+    transform: scale(1.05);
+  }
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.table-actions,
+.m-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+
 .empty-row {
   color: #94a3b8;
   font-size: 0.9rem;

@@ -42,6 +42,7 @@ export class AdminDashboardComponent implements OnInit {
   isLoading = signal<boolean>(false);
   showAll = signal<boolean>(false);
   coupons = signal<Coupon[]>([]);
+  editingCouponId = signal<string | null>(null);
 
   readonly PAGE_SIZE = 15;
   displayedColumns = ['avatar', 'customer', 'coupon', 'prize', 'agent', 'date', 'actions'];
@@ -61,14 +62,31 @@ export class AdminDashboardComponent implements OnInit {
   addForm: FormGroup;
 
   prizeOptions = [
-    { number: '1', name: 'Smart LED TV' },
-    { number: '2', name: 'Cooker' },
-    { number: '3', name: 'Refrigerator' },
-    { number: '4', name: 'Microwave Oven' },
-    { number: '5', name: 'Air Fryer' },
-    { number: '6', name: 'Induction Cooktop' },
-    { number: '7', name: 'Vacuum Cleaner' },
-    { number: '8', name: 'Smart Watch' }
+    { number: '1', name: 'LED Television' },
+    { number: '2', name: 'Hot Box' },
+    { number: '3', name: 'Hot Box' },
+    { number: '4', name: 'Hot Box' },
+    { number: '5', name: 'Hot Box' },
+    { number: '6', name: 'Hot Box' },
+    { number: '7', name: 'Plastic Chair' },
+    { number: '8', name: 'Plastic Chair' },
+    { number: '9', name: 'Plastic Chair' },
+    { number: '10', name: 'Plastic Chair' },
+    { number: '11', name: 'Plastic Chair' },
+    { number: '12', name: 'Puttu Kutti' },
+    { number: '13', name: 'Puttu Kutti' },
+    { number: '14', name: 'Puttu Kutti' },
+    { number: '15', name: 'Puttu Kutti' },
+    { number: '16', name: 'Puttu Kutti' },
+    { number: '17', name: 'Puttu Kutti' },
+    { number: '18', name: 'Puttu Kutti' },
+    { number: '19', name: 'Flask' },
+    { number: '20', name: 'Flask' },
+    { number: '21', name: 'Flask' },
+    { number: '22', name: 'Flask' },
+    { number: '23', name: 'Flask' },
+    { number: '24', name: 'Flask' },
+    { number: '25', name: 'Mixer Grinder' }
   ];
 
   constructor(
@@ -88,14 +106,10 @@ export class AdminDashboardComponent implements OnInit {
     });
 
     this.addForm.get('prizeNumber')?.valueChanges.subscribe(pNum => {
-      const knownPrizes: Record<string, string> = {
-        '1': 'Smart LED TV', '2': 'Cooker', '3': 'Refrigerator',
-        '4': 'Microwave Oven', '5': 'Air Fryer', '6': 'Induction Cooktop',
-        '7': 'Vacuum Cleaner', '8': 'Smart Watch'
-      };
       const numStr = String(pNum);
-      if (knownPrizes[numStr] && !this.addForm.get('prizeName')?.value) {
-        this.addForm.get('prizeName')?.setValue(knownPrizes[numStr]);
+      const prize = this.prizeOptions.find(p => p.number === numStr);
+      if (prize) {
+        this.addForm.get('prizeName')?.setValue(prize.name);
       }
     });
   }
@@ -125,7 +139,21 @@ export class AdminDashboardComponent implements OnInit {
     this.showAddForm.update(v => !v);
     if (!this.showAddForm()) {
       this.addForm.reset();
+      this.editingCouponId.set(null);
     }
+  }
+
+  editWinner(coupon: Coupon): void {
+    if (!coupon._id) return;
+    this.editingCouponId.set(coupon._id);
+    this.showAddForm.set(true);
+    this.addForm.patchValue({
+      customerName: coupon.customerName,
+      couponNumber: coupon.couponNumber,
+      prizeNumber: coupon.prizeNumber,
+      prizeName: coupon.prizeName,
+      agentName: coupon.agentName
+    });
   }
 
   submitWinner(): void {
@@ -143,34 +171,68 @@ export class AdminDashboardComponent implements OnInit {
       agentName: formVal.agentName
     };
 
-    this.couponService.createCoupon(payload).subscribe({
-      next: (res) => {
-        this.isSubmitting.set(false);
-        if (res.success && res.coupon) {
-          // Prepend to list
-          this.coupons.update(list => [res.coupon!, ...list]);
-          // Also trigger live broadcast via WinnerService/SignalR
-          const winner: Winner = {
-            couponNumber: res.coupon.couponNumber,
-            prizeName: res.coupon.prizeName,
-            prizeNumber: res.coupon.prizeNumber,
-            customerName: res.coupon.customerName,
-            agentName: res.coupon.agentName,
-            createdDate: new Date(res.coupon.createdAt || '').toLocaleDateString('en-GB'),
-            timeString: 'Just now'
-          };
-          this.winnerService.addWinner(winner);
+    const editId = this.editingCouponId();
+
+    if (editId) {
+      this.couponService.updateCoupon(editId, payload).subscribe({
+        next: (res) => {
+          this.isSubmitting.set(false);
+          if (res.success && res.coupon) {
+            // Update item in local signal array
+            this.coupons.update(list => list.map(c => c._id === editId ? res.coupon! : c));
+            // Trigger live update via WinnerService/SignalR
+            const winner: Winner = {
+              couponNumber: res.coupon.couponNumber,
+              prizeName: res.coupon.prizeName,
+              prizeNumber: res.coupon.prizeNumber,
+              customerName: res.coupon.customerName,
+              agentName: res.coupon.agentName,
+              createdDate: new Date(res.coupon.createdAt || '').toLocaleDateString('en-GB'),
+              timeString: 'Just now'
+            };
+            this.winnerService.addWinner(winner);
+          }
+          this.addForm.reset();
+          this.showAddForm.set(false);
+          this.editingCouponId.set(null);
+          this.snackBar.open('✅ Coupon updated successfully!', 'Close', { duration: 3000 });
+        },
+        error: (err) => {
+          this.isSubmitting.set(false);
+          const msg = err?.error?.message || 'Failed to update coupon';
+          this.snackBar.open(msg, 'Close', { duration: 4000, panelClass: ['snack-error'] });
         }
-        this.addForm.reset();
-        this.showAddForm.set(false);
-        this.snackBar.open('✅ Coupon added successfully!', 'Close', { duration: 3000 });
-      },
-      error: (err) => {
-        this.isSubmitting.set(false);
-        const msg = err?.error?.message || 'Failed to create coupon';
-        this.snackBar.open(msg, 'Close', { duration: 4000, panelClass: ['snack-error'] });
-      }
-    });
+      });
+    } else {
+      this.couponService.createCoupon(payload).subscribe({
+        next: (res) => {
+          this.isSubmitting.set(false);
+          if (res.success && res.coupon) {
+            // Prepend to list
+            this.coupons.update(list => [res.coupon!, ...list]);
+            // Also trigger live broadcast via WinnerService/SignalR
+            const winner: Winner = {
+              couponNumber: res.coupon.couponNumber,
+              prizeName: res.coupon.prizeName,
+              prizeNumber: res.coupon.prizeNumber,
+              customerName: res.coupon.customerName,
+              agentName: res.coupon.agentName,
+              createdDate: new Date(res.coupon.createdAt || '').toLocaleDateString('en-GB'),
+              timeString: 'Just now'
+            };
+            this.winnerService.addWinner(winner);
+          }
+          this.addForm.reset();
+          this.showAddForm.set(false);
+          this.snackBar.open('✅ Coupon added successfully!', 'Close', { duration: 3000 });
+        },
+        error: (err) => {
+          this.isSubmitting.set(false);
+          const msg = err?.error?.message || 'Failed to create coupon';
+          this.snackBar.open(msg, 'Close', { duration: 4000, panelClass: ['snack-error'] });
+        }
+      });
+    }
   }
 
   deleteWinner(id: string, couponNumber: string): void {

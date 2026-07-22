@@ -42,7 +42,17 @@
       <!-- Add Winner Form -->
       @if (showAddForm()) {
       <div class="add-form-card mb-4">
-
+        <div class="form-banner">
+          <div class="form-banner-icon">
+            <mat-icon style="color: white; vertical-align: middle;">{{ editingCouponId() ? 'edit' : 'emoji_events' }}</mat-icon>
+          </div>
+          <div>
+            <h4 class="form-banner-title">{{ editingCouponId() ? 'Edit Winner Details' : 'Add New Winner' }}</h4>
+            <p class="form-banner-subtitle">
+              {{ editingCouponId() ? 'Modify lucky draw winner information' : 'Record a new lucky draw winner' }}
+            </p>
+          </div>
+        </div>
         <form [formGroup]="addForm" (ngSubmit)="submitWinner()" class="form-body">
           <div class="mat-grid-form">
 
@@ -65,17 +75,23 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="w-full admin-field">
-              <mat-label>Prize Number</mat-label>
-              <input matInput formControlName="prizeNumber" type="number" placeholder="Enter Prize No. (e.g. 1)" />
+              <mat-label>Select Prize</mat-label>
+              <mat-select formControlName="prizeNumber" placeholder="Choose a prize">
+                @for (prize of prizeOptions; track prize.number) {
+                  <mat-option [value]="prize.number">
+                    No. {{ prize.number }} - {{ prize.name }}
+                  </mat-option>
+                }
+              </mat-select>
               <mat-icon matSuffix>emoji_events</mat-icon>
               @if (addForm.get('prizeNumber')?.invalid && addForm.get('prizeNumber')?.touched) {
-              <mat-error>Prize number is required</mat-error>
+              <mat-error>Prize selection is required</mat-error>
               }
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="w-full admin-field">
               <mat-label>Prize Name</mat-label>
-              <input matInput formControlName="prizeName" placeholder="Enter Prize Name (e.g. Smart LED TV)" />
+              <input matInput formControlName="prizeName" placeholder="Prize Name" readonly />
               <mat-icon matSuffix>card_giftcard</mat-icon>
               @if (addForm.get('prizeName')?.invalid && addForm.get('prizeName')?.touched) {
               <mat-error>Prize name is required</mat-error>
@@ -101,7 +117,8 @@
               @if (isSubmitting()) {
               <span class="btn-spinner"></span> Saving...
               } @else {
-              <mat-icon>add_circle</mat-icon> Add Winner
+              <mat-icon>{{ editingCouponId() ? 'save' : 'add_circle' }}</mat-icon>
+              {{ editingCouponId() ? 'Save Changes' : 'Add Winner' }}
               }
             </button>
           </div>
@@ -162,9 +179,14 @@
               <td><div class="agent-cell-sub">{{ coupon.agentName }}</div></td>
               <td><span class="date-cell">{{ coupon.createdAt | date:'dd/MM/yyyy' }}</span></td>
               <td>
-                <button class="btn-delete" (click)="deleteWinner(coupon._id!, coupon.couponNumber)" title="Remove winner">
-                  <mat-icon>delete_outline</mat-icon>
-                </button>
+                <div class="table-actions">
+                  <button class="btn-edit" (click)="editWinner(coupon)" title="Edit winner">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button class="btn-delete" (click)="deleteWinner(coupon._id!, coupon.couponNumber)" title="Remove winner">
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </div>
               </td>
             </tr>
             }
@@ -197,9 +219,14 @@
             <div class="m-name">{{ coupon.customerName }}</div>
             <div class="m-agent">{{ coupon.agentName }}</div>
           </div>
-          <button class="btn-delete" (click)="deleteWinner(coupon._id!, coupon.couponNumber)">
-            <mat-icon>delete_outline</mat-icon>
-          </button>
+          <div class="m-card-actions">
+            <button class="btn-edit" (click)="editWinner(coupon)" title="Edit winner">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button class="btn-delete" (click)="deleteWinner(coupon._id!, coupon.couponNumber)">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
         </div>
         <div class="m-card-bottom">
           <span class="coupon-cell">🎟 {{ coupon.couponNumber }}</span>

@@ -20,14 +20,31 @@ export class SignalrService {
   private agents = ['JOY S', 'ALEX M', 'ROSE T', 'NIK K', 'SAM P', 'KUMAR G', 'ANIL K'];
 
   private prizes = [
-    { name: 'Smart LED TV', number: '1' },
-    { name: 'Cooker', number: '2' },
-    { name: 'Refrigerator', number: '3' },
-    { name: 'Microwave Oven', number: '4' },
-    { name: 'Air Fryer', number: '5' },
-    { name: 'Induction Cooktop', number: '6' },
-    { name: 'Vacuum Cleaner', number: '7' },
-    { name: 'Smart Watch', number: '8' }
+    { name: 'LED Television', number: '1' },
+    { name: 'Hot Box', number: '2' },
+    { name: 'Hot Box', number: '3' },
+    { name: 'Hot Box', number: '4' },
+    { name: 'Hot Box', number: '5' },
+    { name: 'Hot Box', number: '6' },
+    { name: 'Plastic Chair', number: '7' },
+    { name: 'Plastic Chair', number: '8' },
+    { name: 'Plastic Chair', number: '9' },
+    { name: 'Plastic Chair', number: '10' },
+    { name: 'Plastic Chair', number: '11' },
+    { name: 'Puttu Kutti', number: '12' },
+    { name: 'Puttu Kutti', number: '13' },
+    { name: 'Puttu Kutti', number: '14' },
+    { name: 'Puttu Kutti', number: '15' },
+    { name: 'Puttu Kutti', number: '16' },
+    { name: 'Puttu Kutti', number: '17' },
+    { name: 'Puttu Kutti', number: '18' },
+    { name: 'Flask', number: '19' },
+    { name: 'Flask', number: '20' },
+    { name: 'Flask', number: '21' },
+    { name: 'Flask', number: '22' },
+    { name: 'Flask', number: '23' },
+    { name: 'Flask', number: '24' },
+    { name: 'Mixer Grinder', number: '25' }
   ];
 
   private currentCoupon = 122;
